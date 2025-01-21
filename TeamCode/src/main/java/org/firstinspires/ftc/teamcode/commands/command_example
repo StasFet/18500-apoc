@@ -1,0 +1,37 @@
+package org.firstinspires.ftc.teamcode.commands;
+
+import com.arcrobotics.ftclib.command.CommandBase;
+import org.firstinspires.ftc.teamcode.subsystems.*;
+
+public class CommandTemplate extends CommandBase {
+
+    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+    private final ExampleSubsystem g_subsystem;
+
+    // constructor, prepares all the subsystems for use, adds requirements for cmd scheduler to work with later
+    public CommandTemplate(ExampleSubsystem subsystem) {
+        g_subsystem = subsystem;
+        addRequirements(g_subsystem);
+    }
+
+    // initialize - code here will run exactly once per command schedule instance
+    @Override
+    public void initialize() {
+        g_subsystem.doAction();
+    }
+
+    // execute - code here will be run repeatedly until isFinished returns true
+    @Override
+    public void execute() {
+        g_subsystem.doActionRepeatedly();
+    }
+
+    // isFinished - this should return true when you want a command to stop.
+    //      example: drivetrain should never stop so it should never return true
+    //      example: open claw should stop right after the servo position has been set so it can return true right away
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+}
