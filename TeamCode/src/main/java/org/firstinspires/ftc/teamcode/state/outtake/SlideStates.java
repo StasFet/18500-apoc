@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.state.outtake;
 
 public enum SlideStates {
-    UP,
-    DOWN
+    UP_REST,
+    UP_ESCALATING,
+    UP_DEPOSITING,
+    DOWN_LOWERING,
+    DOWN_REST
 }

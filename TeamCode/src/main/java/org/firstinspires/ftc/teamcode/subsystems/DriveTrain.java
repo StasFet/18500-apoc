@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -23,17 +24,29 @@ public class DriveTrain extends SubsystemBase {
     private final GamepadEx gamepad;
     IMU g_imu;
 
-    public DriveTrain(final HardwareMap hMap, MyRobot robot) {
+    public DriveTrain(final MyRobot robot) {
         front_left = robot.fl;
         front_right = robot.fr;
         back_left = robot.bl;
         back_right = robot.br;
 
-        gamepad = robot.gp_drivetrain;
+        gamepad = robot.gp_drive;
         g_imu = robot.imu;
 
         front_right.setDirection(DcMotorEx.Direction.REVERSE);
         back_right.setDirection(DcMotorEx.Direction.REVERSE);
+
+        //set all encoder to 0
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //motors will use built in pid tuning 
+        front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void run() {

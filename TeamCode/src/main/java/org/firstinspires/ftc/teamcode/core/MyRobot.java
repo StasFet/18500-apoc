@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.core;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.state.intake.IntakeSlideStates;
 import org.firstinspires.ftc.teamcode.state.outtake.SlideStates;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 
 public class MyRobot extends Robot {
     //declare core stuff
@@ -19,7 +22,7 @@ public class MyRobot extends Robot {
 
     //declare gamepads
     public GamepadEx gp_general;
-    public GamepadEx gp_drivetrain;
+    public GamepadEx gp_drive;
 
     //declare drivetrain motors
     public DcMotorEx fr, fl, br, bl;
@@ -30,15 +33,33 @@ public class MyRobot extends Robot {
 
     //states subclass
     public class States {
-        public SlideStates slide_state;
+        //timers for finite state machine
+        public ElapsedTime lift_time = new ElapsedTime();
+        public ElapsedTime deposit_timer = new ElapsedTime();
+        public ElapsedTime intake_slide_timer = new ElapsedTime();
+
+        public SlideStates lift_state;
+        public IntakeSlideStates intake_slide_state;
         public States() {
-            SlideStates slide_state = SlideStates.DOWN;
+            lift_state = SlideStates.DOWN_REST;
+            intake_slide_state = IntakeSlideStates.IN;
         }
     }
 
+    //constants subclass
+    @Config
     public static class Constants {
+        //POSITION CONSTANTS
+
         public static int VSLIDES_UP = 2300;
         public static int VSLIDES_DOWN = 0;
+        public static int INT_SLIDES_OUT = 1000;
+        public static int INT_SLIDES_IN = 0;
+
+        // TIMER CONSTANTS
+        public static double LIFT_TIME = 1;
+        public static double INTAKE_SLIDE_TIME = 1;
+        public static double DEPOSIT_TIME = 0.5;
     }
 
     public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2) {
@@ -52,7 +73,7 @@ public class MyRobot extends Robot {
 
         //initialise gamepads
         gp_general = new GamepadEx(gamepad1);
-        gp_drivetrain = new GamepadEx(gamepad2);
+        gp_drive = new GamepadEx(gamepad2);
 
         //initialise motors
         fr = hMap.get(DcMotorEx.class, "fr");
@@ -63,5 +84,9 @@ public class MyRobot extends Robot {
         vslide_2 = hMap.get(DcMotorEx.class, "vslide_2");
         intake_slide = hMap.get(DcMotorEx.class, "intake_slide");
 
+        //reset encoders for all motors
+        vslide_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vslide_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
