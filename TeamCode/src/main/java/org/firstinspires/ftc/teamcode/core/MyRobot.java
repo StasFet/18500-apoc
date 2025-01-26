@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.state.intake.IntakeSlideStates;
 import org.firstinspires.ftc.teamcode.state.outtake.SlideStates;
 
@@ -18,7 +19,8 @@ public class MyRobot extends Robot {
     //declare core stuff
     public IMU imu;
     IMU.Parameters imu_params;
-    public States state = new States();
+    public States state;
+    public GoBildaPinpointDriver odo;
 
     //declare gamepads
     public GamepadEx gp_general;
@@ -70,6 +72,9 @@ public class MyRobot extends Robot {
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(imu_params);
+        state = new States();
+        odo = hMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setOffsets(0, 0);
 
         //initialise gamepads
         gp_general = new GamepadEx(gamepad1);
