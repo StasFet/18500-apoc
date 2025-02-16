@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -32,7 +33,9 @@ public class MyRobot extends Robot {
     public DcMotorEx vslide_1, vslide_2;
     public DcMotorEx intake_slide;
 
-    //constants subclass
+    //declare hang servos
+    public Servo hang_servo_left;
+    public Servo hang_servo_right;
 
     public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t) {
 
@@ -65,6 +68,10 @@ public class MyRobot extends Robot {
         vslide_1 = hMap.get(DcMotorEx.class, "vslide_1");
         vslide_2 = hMap.get(DcMotorEx.class, "vslide_2");
         intake_slide = hMap.get(DcMotorEx.class, "intake_slide");
+
+        //initialise servos
+        hang_servo_left = hMap.get(Servo.class, "hang_left");
+        hang_servo_right = hMap.get(Servo.class, "hang_right");
 
         //reset encoders for all motors
         vslide_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.core.Constants.*;
+
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +50,7 @@ public class DriveTrain extends SubsystemBase {
 		double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
 		double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
 
-		rotX *= 1.1;
+		rotX *= TURN_COEFFICIENT;
 
 		double denominator = Math.max(Math.abs(rotX) + Math.abs(rotY) + Math.abs(rx), 1);
 		double fl_power = (rotY + rotX + rx) / denominator;
