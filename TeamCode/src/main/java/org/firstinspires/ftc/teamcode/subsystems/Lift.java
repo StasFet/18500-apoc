@@ -28,8 +28,10 @@ public class Lift extends SubsystemBase {
         motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //encoder is used to be able to set velocity of motors
+        //we should use a velocity pidf controller because we need precise control with low overshoot, and we dont need time to be super optimised
+        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         pidf.setTolerance(LIFT_TOLERANCE);
     }
