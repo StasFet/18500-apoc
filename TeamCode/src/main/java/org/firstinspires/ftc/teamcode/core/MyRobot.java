@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.core;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -15,12 +17,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 
+import pedroPathing.constants.FConstants;
+
 public class MyRobot extends Robot {
     //declare core stuff
     public IMU imu;
     IMU.Parameters imu_params;
     public GoBildaPinpointDriver odo;
     Telemetry telemetry;
+    public Follower follower;
 
     //declare gamepads
     public GamepadEx gp_general;
@@ -37,45 +42,67 @@ public class MyRobot extends Robot {
     public Servo hang_servo_left;
     public Servo hang_servo_right;
 
-    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t) {
-
-        //imu stuff - no longer needed because of pinpoint odo
-        imu = hMap.get(IMU.class, "imu");
-        imu_params = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        imu.initialize(imu_params);
-
-        //pinpoint odometry set-up
-        //@TODO: measure offset, directions
-        odo = hMap.get(GoBildaPinpointDriver.class, "odo");
+    //pinpoint odometry set-up
+    //@TODO: measure offset, directions
+    private void initPinpointOdometry(HardwareMap hMap) {
+        odo = hMap.get(GoBildaPinpointDriver.class, "pinpoint");
         odo.resetPosAndIMU();
         odo.setOffsets(0, 0);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
-        telemetry = t;
-
+    }
+    private void initIMU(HardwareMap hMap) {
+        //imu stuff - no longer needed because of pinpoint odo
+        imu = hMap.get(IMU.class, "imu");
+        imu_params = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(imu_params);
+    }
+    private void initGamepads(Gamepad gp1, Gamepad gp2) {
         //initialise gamepads
-        gp_general = new GamepadEx(gamepad1);
-        gp_drive = new GamepadEx(gamepad2);
-
+        gp_general = new GamepadEx(gp1);
+        gp_drive = new GamepadEx(gp2);
+    }
+    private void initDriveMotors(HardwareMap hMap) {
         //initialise motors
-        fr = hMap.get(DcMotorEx.class, "fr");
-        fl = hMap.get(DcMotorEx.class, "fl");
-        br = hMap.get(DcMotorEx.class, "br");
-        bl = hMap.get(DcMotorEx.class, "bl");
+        fr = hMap.get(DcMotorEx.class, "rightFront");
+        fl = hMap.get(DcMotorEx.class, "leftFront");
+        br = hMap.get(DcMotorEx.class, "rightRear");
+        bl = hMap.get(DcMotorEx.class, "leftRear");
+        br.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    private void initOtherMotors(HardwareMap hMap) {
         vslide_1 = hMap.get(DcMotorEx.class, "vslide_1");
         vslide_2 = hMap.get(DcMotorEx.class, "vslide_2");
         intake_slide = hMap.get(DcMotorEx.class, "intake_slide");
 
-        //initialise servos
-        hang_servo_left = hMap.get(Servo.class, "hang_left");
-        hang_servo_right = hMap.get(Servo.class, "hang_right");
-
-        //reset encoders for all motors
+        //reset encoders on relevant motors that will use ticks for velocity PIDs
         vslide_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vslide_2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intake_slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    private void initServos(HardwareMap hMap) {
+        hang_servo_left = hMap.get(Servo.class, "hang_left");
+        hang_servo_right = hMap.get(Servo.class, "hang_right");
+    }
+
+    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t) {
+        follower = new Follower(hMap);
+
+        telemetry = t;
+
+        //initPinpointOdometry(hMap);
+        initIMU(hMap);
+        initGamepads(gamepad1, gamepad2);
+        initDriveMotors(hMap);
+        //initOtherMotors(hMap);
+        //initServos(hMap);
     }
 }

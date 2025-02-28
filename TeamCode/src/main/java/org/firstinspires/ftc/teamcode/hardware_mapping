@@ -15,4 +15,11 @@ Hardware Mapping - Save all the hardware names here
 
 
 DEVICE      |PORT         |NAME         
-Example      eh 3           "example"
+front right  eh0           rightFront
+front left   eh1           leftFront
+back right   eh2           rightRear
+back left    eh3           leftRear
+
+strafe odo   eh3           leftRear
+right odo    eh0           rightFront
+left odo     eh2           rightRear

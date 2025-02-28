@@ -19,7 +19,7 @@ public class Lift extends SubsystemBase {
     double d = 0;
     double f = 0;
 
-    PIDFController pidf = new PIDFController(1, 0, 0, 0);
+    PIDFController pidf = new PIDFController(0.001, 0, 0, 0);
 
     public Lift(MyRobot robot) {
         this.motor1 = robot.vslide_1;

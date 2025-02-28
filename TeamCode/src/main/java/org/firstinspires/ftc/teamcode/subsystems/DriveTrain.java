@@ -4,8 +4,10 @@ import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.MyRobot;
@@ -17,6 +19,7 @@ public class DriveTrain extends SubsystemBase {
 	private DcMotorEx br;
 	private DcMotorEx bl;
 	private GamepadEx gp;
+	MyRobot robot;
 
 	GoBildaPinpointDriver odo;
 
@@ -27,6 +30,7 @@ public class DriveTrain extends SubsystemBase {
 		bl = robot.bl;
 		odo = robot.odo;
 		gp = robot.gp_drive;
+		this.robot = robot;
 
 		fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -39,7 +43,7 @@ public class DriveTrain extends SubsystemBase {
 		bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 	}
 
-	public void drive() {
+	public void fc_drive() {
 		double y = -gp.getLeftY();
 		double x = gp.getLeftX();
 		double rx = gp.getRightX();
@@ -62,5 +66,33 @@ public class DriveTrain extends SubsystemBase {
 		fl.setPower(fl_power);
 		br.setPower(br_power);
 		bl.setPower(bl_power);
+		followerDrive();
+	}
+
+	public void rc_drive() {
+		double y = -gp.getLeftY(); // Remember, Y stick value is reversed
+		double x = -gp.getLeftX()* 1.1; // Counteract imperfect strafing
+		double rx = -gp.getRightX();
+
+		rx *= TURN_COEFFICIENT;
+
+		// Denominator is the largest motor power (absolute value) or 1
+		// This ensures all the powers maintain the same ratio,
+		// but only if at least one is out of the range [-1, 1]
+		double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+		double frontLeftPower = (y + x + rx) / denominator;
+		double backLeftPower = (y - x + rx) / denominator;
+		double frontRightPower = (y - x - rx) / denominator;
+		double backRightPower = (y + x - rx) / denominator;
+
+		fl.setPower(frontLeftPower);
+		bl.setPower(backLeftPower);
+		fr.setPower(frontRightPower);
+		br.setPower(backRightPower);
+	}
+
+	public void followerDrive() {
+		robot.follower.setTeleOpMovementVectors(-robot.gp_drive.getLeftY(), -robot.gp_drive.getLeftX(), -robot.gp_drive.getRightX(), false);
+		robot.follower.update();
 	}
 }

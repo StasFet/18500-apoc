@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Constants {
     //control constants
-    public static double TURN_COEFFICIENT = 0.6;
+    public static double TURN_COEFFICIENT = 0.6;    //makes turning less sensitive
 
     //movement constants
     public static int LIFT_TOLERANCE = 15;
