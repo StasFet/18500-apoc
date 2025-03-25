@@ -15,24 +15,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 
 import pedroPathing.constants.FConstants;
 
 public class MyRobot extends Robot {
+
     //declare core stuff
     public IMU imu;
     IMU.Parameters imu_params;
     public GoBildaPinpointDriver odo;
     Telemetry telemetry;
     public Follower follower;
+    OpModeType opmode;
 
     //declare gamepads
     public GamepadEx gp_general;
     public GamepadEx gp_drive;
 
-    //declare drivetrain motors
+    //declare drivetrain + intake motors
     public DcMotorEx fr, fl, br, bl;
+    public DcMotorEx intake_spin;
 
     //declare slide motors
     public DcMotorEx vslide_1, vslide_2;
@@ -42,8 +45,12 @@ public class MyRobot extends Robot {
     public Servo hang_servo_left;
     public Servo hang_servo_right;
 
+    public enum OpModeType {
+        TELE_OP,
+        AUTO
+    }
+
     //pinpoint odometry set-up
-    //@TODO: measure offset, directions
     private void initPinpointOdometry(HardwareMap hMap) {
         odo = hMap.get(GoBildaPinpointDriver.class, "pinpoint");
         odo.resetPosAndIMU();
@@ -82,6 +89,7 @@ public class MyRobot extends Robot {
         vslide_1 = hMap.get(DcMotorEx.class, "vslide_1");
         vslide_2 = hMap.get(DcMotorEx.class, "vslide_2");
         intake_slide = hMap.get(DcMotorEx.class, "intake_slide");
+        intake_spin = hMap.get(DcMotorEx.class, "intake");
 
         //reset encoders on relevant motors that will use ticks for velocity PIDs
         vslide_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -93,16 +101,20 @@ public class MyRobot extends Robot {
         hang_servo_right = hMap.get(Servo.class, "hang_right");
     }
 
-    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t) {
+    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t, OpModeType type) {
+        opmode = type;
         follower = new Follower(hMap);
 
         telemetry = t;
 
-        //initPinpointOdometry(hMap);
-        initIMU(hMap);
-        initGamepads(gamepad1, gamepad2);
-        initDriveMotors(hMap);
-        //initOtherMotors(hMap);
-        //initServos(hMap);
+        if (opmode == OpModeType.TELE_OP) {
+            //initPinpointOdometry(hMap);
+            initIMU(hMap);
+            initGamepads(gamepad1, gamepad2);
+            initDriveMotors(hMap);
+            //initOtherMotors(hMap);
+            //initServos(hMap);
+        }
+
     }
 }
