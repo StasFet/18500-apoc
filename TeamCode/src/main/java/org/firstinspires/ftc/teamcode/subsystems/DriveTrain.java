@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.core.MyRobot;
 
 public class DriveTrain extends SubsystemBase {

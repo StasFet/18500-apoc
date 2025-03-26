@@ -30,7 +30,7 @@ public class RegularOpMode extends CommandOpMode {
 
     @Override
     public void initialize() {
-        robot = new MyRobot(hardwareMap, gamepad1, gamepad2, telemetry, MyRobot.OpModeType.TELE_OP);
+        robot = new MyRobot(hardwareMap, gamepad1, gamepad2, telemetry, MyRobot.OpModeType.TELE_OP, Intake.IntakeColour.BLUEYELLOW);
         follower = robot.follower;
         pinpoint = robot.odo;
         odoThread = new OdoRefresh();

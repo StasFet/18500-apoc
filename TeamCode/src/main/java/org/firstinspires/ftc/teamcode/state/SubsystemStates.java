@@ -7,8 +7,11 @@ public class SubsystemStates {
 
     public enum IntakeStates {
         IDLE,
+        ACTIVATED,
         EXTENDING,
+        SPINNING,
         SEARCHING_FOR_SAMPLE,
+        EJECTING,
         RETRACTING,
         TRANSFER
     }

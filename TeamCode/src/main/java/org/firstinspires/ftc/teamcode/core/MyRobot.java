@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.core;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.pedropathing.follower.Follower;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -12,12 +12,12 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.pedropathing.localization.GoBildaPinpointDriver;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Intake.*;
 
-import pedroPathing.constants.FConstants;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 
 public class MyRobot extends Robot {
 
@@ -28,6 +28,10 @@ public class MyRobot extends Robot {
     Telemetry telemetry;
     public Follower follower;
     OpModeType opmode;
+    public Intake.IntakeColour intakeColour;
+
+    //sensors and other widgets
+    public RevColorSensorV3 intakeColorSensor;
 
     //declare gamepads
     public GamepadEx gp_general;
@@ -101,9 +105,10 @@ public class MyRobot extends Robot {
         hang_servo_right = hMap.get(Servo.class, "hang_right");
     }
 
-    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t, OpModeType type) {
+    public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t, OpModeType type, IntakeColour colour) {
         opmode = type;
         follower = new Follower(hMap);
+        this.intakeColour = colour;
 
         telemetry = t;
 
@@ -114,6 +119,8 @@ public class MyRobot extends Robot {
             initDriveMotors(hMap);
             //initOtherMotors(hMap);
             //initServos(hMap);
+        } else if (opmode == OpModeType.AUTO) {
+            // do stuff
         }
 
     }

@@ -19,10 +19,11 @@ import pedroPathing.constants.LConstants;
 
 import org.firstinspires.ftc.teamcode.core.MyRobot;
 import org.firstinspires.ftc.teamcode.opmodes.auto.*;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
-@Autonomous
+@Autonomous(name = "Blue Auto")
 public class TestAuto extends OpMode {
-	MyRobot robot = new MyRobot(hardwareMap, gamepad1, gamepad2, telemetry, MyRobot.OpModeType.AUTO);
+	MyRobot robot = new MyRobot(hardwareMap, gamepad1, gamepad2, telemetry, MyRobot.OpModeType.AUTO, Intake.IntakeColour.BLUEYELLOW);
 	Follower follower = robot.follower;
 	BuildPaths bp = new BuildPaths();
 	ElapsedTime timer = new ElapsedTime();
