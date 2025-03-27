@@ -21,9 +21,11 @@ public class RegularOpMode extends CommandOpMode {
     private Follower follower;
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
     private OdoRefresh odoThread;
+    private boolean odoThreadOn = false;
 
     //subsystems
     DriveTrain dt;
+    Intake intake;
 
     //commands
     Drive drive;
@@ -36,18 +38,35 @@ public class RegularOpMode extends CommandOpMode {
         odoThread = new OdoRefresh();
 
         dt = new DriveTrain(robot);
+        intake = new Intake(robot);
         drive = new Drive(dt, robot);
 
         follower.setStartingPose(startPose);
-        odoThread.start();
     }
 
 
     @Override
     public void run() {
+        pinpoint.update();  //change to thread if doesn't work
         follower.startTeleopDrive();
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
+        runtimeControls();
+    }
+
+    private void runtimeControls() {
+        switch (intake.state) {
+            case IDLE:
+                //if button pressed, schedule IntakeExtendAndReady
+                break;
+            case EXTENDED:
+                //if button pressed, schedule IntakeDetectAndRetract
+                break;
+            case TRANSFER:
+                //if button pressed, schedule TransferAndReady
+            default:
+                break;
+        }
     }
 
     private class OdoRefresh extends Thread {

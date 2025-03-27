@@ -6,12 +6,12 @@ import org.firstinspires.ftc.teamcode.core.MyRobot;
 import org.firstinspires.ftc.teamcode.state.SubsystemStates;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
-//intake-only, does full intake stuff until transfer
-public class IntakeAndReadyForTransfer extends CommandBase {
+// intake-only, does full intake stuff until transfer
+public class IntakeDetectAndRetract extends CommandBase {
     MyRobot robot;
     Intake intake;
 
-    public IntakeAndReadyForTransfer(Intake intake, MyRobot robot) {
+    public IntakeDetectAndRetract(Intake intake, MyRobot robot) {
         this.intake = intake;
         this.robot = robot;
 
@@ -26,13 +26,7 @@ public class IntakeAndReadyForTransfer extends CommandBase {
 
     public void execute() {
         switch (intake.state) {
-            case IDLE:
-                break;
-            case ACTIVATED:
-                intake.setState(SubsystemStates.IntakeStates.EXTENDING);
-                break;
-            case EXTENDING:
-                intake.extendSlides();
+            case EXTENDED:
                 intake.setState(SubsystemStates.IntakeStates.SEARCHING_FOR_SAMPLE);
                 break;
             case SEARCHING_FOR_SAMPLE:
@@ -44,7 +38,7 @@ public class IntakeAndReadyForTransfer extends CommandBase {
             case EJECTING:
                 robot.intakeColorSensor.enableLed(false);
                 intake.intakeEject();
-                while (intake.timer.milliseconds() <= 350) {}   //note: intake will eject for 350ms
+                while (intake.timer.milliseconds() <= 350) {}   //note: intake will eject for 350ms to prevent possession of 2
                 intake.intakeOff();
                 intake.setState(SubsystemStates.IntakeStates.RETRACTING);
                 break;

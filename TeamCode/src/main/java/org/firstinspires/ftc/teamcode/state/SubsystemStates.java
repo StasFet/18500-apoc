@@ -9,7 +9,7 @@ public class SubsystemStates {
         IDLE,
         ACTIVATED,
         EXTENDING,
-        SPINNING,
+        EXTENDED,
         SEARCHING_FOR_SAMPLE,
         EJECTING,
         RETRACTING,

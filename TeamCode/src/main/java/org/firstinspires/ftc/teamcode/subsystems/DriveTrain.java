@@ -29,7 +29,7 @@ public class DriveTrain extends SubsystemBase {
 		br = robot.br;
 		bl = robot.bl;
 		odo = robot.odo;
-		gp = robot.gp_drive;
+		gp = robot.gpDrive;
 		this.robot = robot;
 
 		fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -92,7 +92,7 @@ public class DriveTrain extends SubsystemBase {
 	}
 
 	public void followerDrive() {
-		robot.follower.setTeleOpMovementVectors(-robot.gp_drive.getLeftY(), -robot.gp_drive.getLeftX(), -robot.gp_drive.getRightX(), false);
+		robot.follower.setTeleOpMovementVectors(-robot.gpDrive.getLeftY(), -robot.gpDrive.getLeftX(), -robot.gpDrive.getRightX(), false);
 		robot.follower.update();
 	}
 }

@@ -35,8 +35,8 @@ public class Intake extends SubsystemBase {
         this.state = SubsystemStates.IntakeStates.IDLE;
         this.intakeBusy = false;
         this.robot = robot;
-        this.intake = robot.intake_spin;
-        this.slides = robot.intake_slide;
+        this.intake = robot.intakeSpin;
+        this.slides = robot.intakeSlide;
         this.colorSensor = robot.intakeColorSensor;
         this.colours = robot.intakeColour;
         this.timer = new ElapsedTime();
@@ -78,7 +78,7 @@ public class Intake extends SubsystemBase {
 
     public boolean checkSample() {
         switch (colours) {
-            case BLUEYELLOW: case REDYELLOW:
+            case BLUEYELLOW: case REDYELLOW: case YELLOW:
                 if (detectColour(Colours.YELLOW)) return true;
             case BLUE:
                 if (detectColour(Colours.BLUE)) return true;
@@ -111,6 +111,7 @@ public class Intake extends SubsystemBase {
         RED,
         BLUE,
         REDYELLOW,
-        BLUEYELLOW
+        BLUEYELLOW,
+        YELLOW
     }
 }

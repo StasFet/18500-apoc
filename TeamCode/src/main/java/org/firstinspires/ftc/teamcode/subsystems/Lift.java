@@ -26,8 +26,8 @@ public class Lift extends SubsystemBase {
     PIDFController pidf = new PIDFController(p, i, d, f);
 
     public Lift(MyRobot robot) {
-        this.motor1 = robot.vslide_1;
-        this.motor2 = robot.vslide_2;
+        this.motor1 = robot.vslide1;
+        this.motor2 = robot.vslide2;
         this.robot = robot;
 
         motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
