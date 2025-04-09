@@ -37,7 +37,7 @@ public class Constants {
     public static double BLUE_MIN = 150;
     public static double OTHER_COLOUR_MAX = 100;
 
-    // --------------------------------
+// -----------------------------------------------------------------------------
     // -------- HARDWARE NAMES --------
     public static String NAME_PINPOINT = "pinpoint";
     public static String NAME_COLOURSENSOR = "colour_sensor";

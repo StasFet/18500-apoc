@@ -32,7 +32,7 @@ public class IntakeExtendAndReady extends CommandBase {
             case ACTIVATED:
                 intake.setState(SubsystemStates.IntakeStates.EXTENDING);
                 break;
-            case EXTENDING:
+              case EXTENDING:
                 intake.extendSlides();
                 intake.setState(SubsystemStates.IntakeStates.EXTENDED);
                 break;

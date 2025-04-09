@@ -77,13 +77,20 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean checkSample() {
+        boolean y = detectColour(Colours.YELLOW);
+        boolean b = detectColour(Colours.BLUE);
+        boolean r = detectColour(Colours.RED);
         switch (colours) {
-            case BLUEYELLOW: case REDYELLOW: case YELLOW:
-                if (detectColour(Colours.YELLOW)) return true;
+            case YELLOW:
+                return (y);
             case BLUE:
-                if (detectColour(Colours.BLUE)) return true;
+                return (b);
             case RED:
-                if (detectColour(Colours.RED)) return true;
+                return (r);
+            case BLUEYELLOW:
+                return (b || y);
+            case REDYELLOW:
+                return (r || y);
             default:
                 return false;
         }
