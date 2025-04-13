@@ -22,6 +22,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Intake.*;
 
 import com.pedropathing.localization.GoBildaPinpointDriver;
 
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
+
 public class MyRobot extends Robot {
 
     //declare core stuff
@@ -55,6 +58,7 @@ public class MyRobot extends Robot {
     public ServoEx clawServo;
     public ServoEx armRightServo;
     public ServoEx armLeftServo;
+    public ServoEx ptoServo;
 
     public enum OpModeType {
         TELE_OP,
@@ -115,7 +119,7 @@ public class MyRobot extends Robot {
         clawServo = hMap.get(ServoEx.class, NAME_CLAW);
         armRightServo = hMap.get(ServoEx.class, NAME_ARMR);
         armLeftServo = hMap.get(ServoEx.class, NAME_ARML);
-
+        ptoServo = hMap.get(ServoEx.class, NAME_PTO);
     }
     private void initSensors(HardwareMap hMap) {
         intakeColorSensor = hMap.get(RevColorSensorV3.class, NAME_COLOURSENSOR);
@@ -123,7 +127,7 @@ public class MyRobot extends Robot {
 
     public MyRobot(HardwareMap hMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry t, OpModeType type, IntakeColour colour) {
         opmode = type;
-        follower = new Follower(hMap);
+        follower = new Follower(hMap, FConstants.class, LConstants.class);      // after making local changes to pp it made me add the 2nd and 3rd param??
         this.intakeColour = colour;
 
         telemetry = t;

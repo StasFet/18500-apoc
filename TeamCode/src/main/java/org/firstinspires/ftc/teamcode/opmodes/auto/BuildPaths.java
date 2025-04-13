@@ -9,6 +9,6 @@ public class BuildPaths {
 	public static Path move;
 
 	public BuildPaths() {
-		move = new Path(new BezierLine(Positions.start, Positions.end));
+		//move = new Path(new BezierLine(Positions.start, Positions.end));
 	}
 }

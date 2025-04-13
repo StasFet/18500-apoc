@@ -62,6 +62,6 @@ public class TestAuto extends OpMode {
 	public void init() {
 		pathState = 0;
 		Constants.setConstants(FConstants.class, LConstants.class);
-		follower.setStartingPose(Positions.start);
+		//follower.setStartingPose(Positions.start);
 	}
 }
