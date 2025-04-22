@@ -93,7 +93,6 @@ public class MyRobot extends Robot {
         fl = hMap.get(DcMotorEx.class, NAME_FL);
         br = hMap.get(DcMotorEx.class, NAME_BR);
         bl = hMap.get(DcMotorEx.class, NAME_BL);
-        br.setDirection(DcMotorSimple.Direction.REVERSE);
 
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -133,8 +132,8 @@ public class MyRobot extends Robot {
         telemetry = t;
 
         if (opmode == OpModeType.TELE_OP) {
-            initSensors(hMap);
-            //initPinpoint(hMap);
+            //initSensors(hMap);
+            initPinpoint(hMap);
             initIMU(hMap);
             initGamepads(gamepad1, gamepad2);
             initDriveMotors(hMap);

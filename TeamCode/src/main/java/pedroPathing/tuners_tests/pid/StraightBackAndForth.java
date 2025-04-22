@@ -50,7 +50,7 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);      // after making local changes to pp it made me add the 2nd and 3rd param??);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);

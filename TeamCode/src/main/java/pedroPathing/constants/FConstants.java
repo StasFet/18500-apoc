@@ -19,8 +19,8 @@ public class FConstants {
         FollowerConstants.rightFrontMotorName = NAME_FR;
         FollowerConstants.rightRearMotorName = NAME_BR;
 
-        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
-        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
@@ -29,7 +29,7 @@ public class FConstants {
         FollowerConstants.rightFrontMotorMulti = 1.0;
         FollowerConstants.rightRearMotorMulti = 1.0;
 
-        FollowerConstants.mass = 4;
+        FollowerConstants.mass = 10;
 
         //34.568
         FollowerConstants.xMovement = 34.568;

@@ -266,7 +266,7 @@ public class ExampleBucketAuto extends OpMode {
         opmodeTimer.resetTimer();
 
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);      // after making local changes to pp it made me add the 2nd and 3rd param??
         follower.setStartingPose(startPose);
         buildPaths();
     }

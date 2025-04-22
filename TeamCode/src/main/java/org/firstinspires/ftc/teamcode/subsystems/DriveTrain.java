@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import com.pedropathing.localization.GoBildaPinpointDriver;
+
+import org.firstinspires.ftc.teamcode.core.Constants;
 import org.firstinspires.ftc.teamcode.core.MyRobot;
 
 public class DriveTrain extends SubsystemBase {
@@ -70,25 +72,20 @@ public class DriveTrain extends SubsystemBase {
 	}
 
 	public void rc_drive() {
-		double y = -gp.getLeftY(); // Remember, Y stick value is reversed
-		double x = -gp.getLeftX()* 1.1; // Counteract imperfect strafing
-		double rx = -gp.getRightX();
+		double y = gp.getLeftY();
+		double x = gp.getLeftX() * 1.1; // Counteract imperfect strafing
+		double rx = gp.getRightX();
 
-		rx *= TURN_COEFFICIENT;
-
-		// Denominator is the largest motor power (absolute value) or 1
-		// This ensures all the powers maintain the same ratio,
-		// but only if at least one is out of the range [-1, 1]
 		double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 		double frontLeftPower = (y + x + rx) / denominator;
 		double backLeftPower = (y - x + rx) / denominator;
 		double frontRightPower = (y - x - rx) / denominator;
 		double backRightPower = (y + x - rx) / denominator;
 
-		fl.setPower(frontLeftPower);
-		bl.setPower(backLeftPower);
-		fr.setPower(frontRightPower);
-		br.setPower(backRightPower);
+		fl.setPower(frontLeftPower * REAR_DT_MULTI);
+		bl.setPower(backLeftPower * REAR_DT_MULTI);
+		fr.setPower(frontRightPower * FRONT_DT_MULTI);
+		br.setPower(backRightPower * FRONT_DT_MULTI);
 	}
 
 	public void followerDrive() {

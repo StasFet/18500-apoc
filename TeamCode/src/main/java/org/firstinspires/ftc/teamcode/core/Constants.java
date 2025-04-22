@@ -15,6 +15,9 @@ public class Constants {
     public static int LIFT_UP = 2300;
     public static int LIFT_DOWN = 0;
 
+    public static double FRONT_DT_MULTI = 1.0;
+    public static double REAR_DT_MULTI = 1.0;
+
     public static int INTAKE_TOLERANCE = 15;
     public static int INTAKE_IN_POS = 0;
     public static int INTAKE_OUT_POS = 1000;

@@ -52,6 +52,8 @@ public class Basic extends LinearOpMode {
         // Reverse motors as needed
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
