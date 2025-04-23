@@ -1,22 +1,24 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.commands;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.pedropathing.util.Constants;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 
-import org.firstinspires.ftc.teamcode.commands.*;
-import org.firstinspires.ftc.teamcode.core.MyRobot;
-import org.firstinspires.ftc.teamcode.subsystems.*;
+import org.firstinspires.ftc.teamcode._deprecated.Drive;
+import org.firstinspires.ftc.teamcode._deprecated.DriveTrain;
+import org.firstinspires.ftc.teamcode._deprecated.Intake;
+import org.firstinspires.ftc.teamcode._deprecated.MyRobot;
 
 import pedroPathing.constants.*;
 
 @TeleOp(name = "APOC teleop", group = "teleop")
+@Disabled
 public class RegularOpMode extends CommandOpMode {
     //core stuff
     private MyRobot robot;
@@ -40,7 +42,7 @@ public class RegularOpMode extends CommandOpMode {
         pinpoint = robot.odo;
         //odoThread = new OdoRefresh();
 
-        intake = new Intake(robot);
+        //intake = new Intake(robot);
         dt = new DriveTrain(robot);
         drive = new Drive(dt, robot);
 

@@ -1,18 +1,13 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode._deprecated;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import com.pedropathing.localization.GoBildaPinpointDriver;
-
-import org.firstinspires.ftc.teamcode.core.Constants;
-import org.firstinspires.ftc.teamcode.core.MyRobot;
 
 public class DriveTrain extends SubsystemBase {
 

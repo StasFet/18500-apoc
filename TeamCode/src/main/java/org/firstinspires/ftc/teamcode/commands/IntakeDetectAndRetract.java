@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.core.MyRobot;
+import org.firstinspires.ftc.teamcode._deprecated.Intake;
+import org.firstinspires.ftc.teamcode._deprecated.MyRobot;
 import org.firstinspires.ftc.teamcode.state.SubsystemStates;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 // intake-only, does full intake stuff until transfer
 public class IntakeDetectAndRetract extends CommandBase {

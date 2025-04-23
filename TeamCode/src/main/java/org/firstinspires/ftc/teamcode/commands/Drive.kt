@@ -1,25 +1,12 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode.commands
 
-import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.CommandBase
+import org.firstinspires.ftc.teamcode.core.Robot
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDrive
 
-import org.firstinspires.ftc.teamcode.core.MyRobot;
-import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+class Drive(val dt: MecanumDrive, val robot: Robot) : CommandBase() {
+    init { addRequirements(dt) }
 
-public class Drive extends CommandBase {
-	private DriveTrain dt;
-
-	public Drive(DriveTrain dt_p, MyRobot robot_p) {
-		dt = dt_p;
-		addRequirements(dt);
-	}
-
-	@Override
-	public void execute() {
-		dt.rc_drive();
-	}
-
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
+    override fun execute() = dt.rcDrive()
+    override fun isFinished(): Boolean = false
 }

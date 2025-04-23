@@ -7,20 +7,24 @@ public class Constants {
     // -------- GENERAL --------
     public static boolean UPDATE_ODO = true;
 
-    // -------- CONTROL --------
-    public static double TURN_COEFFICIENT = 0.6;    //note: makes turning less sensitive
+    // -------- DRIVE --------
+    public static double TURN_COEFFICIENT = 0.6;    //note: makes turning less
+    public static double FRONT_DT_MULTI = 1.0;
+    public static double REAR_DT_MULTI = 1.0;
+    public static double CACHE_THRESHOLD = 0.01;
 
     // -------- MOVEMENT --------
     public static int LIFT_TOLERANCE = 15;
     public static int LIFT_UP = 2300;
     public static int LIFT_DOWN = 0;
 
-    public static double FRONT_DT_MULTI = 1.0;
-    public static double REAR_DT_MULTI = 1.0;
-
-    public static int INTAKE_TOLERANCE = 15;
+    public static double INTAKE_TOLERANCE = 15;
     public static int INTAKE_IN_POS = 0;
     public static int INTAKE_OUT_POS = 1000;
+
+    public static double HANG_UP_POWER = 0.5;
+    public static double HANG_RETRACT_TIME = 1000;         // note: in ms
+    public static double HANG_EXTEND_TIME = 1000;
 
     public static double CLAW_OPEN = 1;
     public static double CLAW_CLOSED = 0;
@@ -60,4 +64,6 @@ public class Constants {
     public static String NAME_WRIST = "wrist";
     public static String NAME_ARML = "arm_left";
     public static String NAME_ARMR = "arm_right";
+    public static String NAME_HANGRIGHT = "hangRight";
+    public static String NAME_HANGLEFT = "hangLeft";
 }

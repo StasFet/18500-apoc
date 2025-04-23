@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.core.Constants.*;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 
-import org.firstinspires.ftc.teamcode.core.MyRobot;
+import org.firstinspires.ftc.teamcode._deprecated.MyRobot;
 
 public class Outtake extends SubsystemBase {
 	private MyRobot robot;

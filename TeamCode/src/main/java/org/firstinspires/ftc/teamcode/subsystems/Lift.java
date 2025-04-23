@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
-import org.firstinspires.ftc.teamcode.core.MyRobot;
-import org.firstinspires.ftc.teamcode.state.SubsystemStates.OuttakeState;
+import org.firstinspires.ftc.teamcode._deprecated.MyRobot;
 
 @Config
 public class Lift extends SubsystemBase {

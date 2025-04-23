@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.core;
+package org.firstinspires.ftc.teamcode._deprecated;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
@@ -6,24 +6,15 @@ import com.arcrobotics.ftclib.command.Robot;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.pedropathing.follower.Follower;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.rev.*;
+import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Intake.*;
+import org.firstinspires.ftc.teamcode._deprecated.Intake.*;
 
 import com.pedropathing.localization.GoBildaPinpointDriver;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
+import pedroPathing.constants.*;
 
 public class MyRobot extends Robot {
 
@@ -87,6 +78,7 @@ public class MyRobot extends Robot {
         gpGeneral = new GamepadEx(gp1);
         gpDrive = new GamepadEx(gp2);
     }
+
     private void initDriveMotors(HardwareMap hMap) {
         //initialise motors
         fr = hMap.get(DcMotorEx.class, NAME_FR);
