@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode._deprecated;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @TeleOp(name = "Full Robot Control", group = "Linear Opmode")
 @Config
+@Disabled
 public class Basic extends LinearOpMode {
 
     public static double servoPosition = 0.4;

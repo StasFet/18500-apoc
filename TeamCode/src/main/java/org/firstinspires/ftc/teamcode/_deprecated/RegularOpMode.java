@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands;
+package org.firstinspires.ftc.teamcode._deprecated;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
@@ -9,11 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-
-import org.firstinspires.ftc.teamcode._deprecated.Drive;
-import org.firstinspires.ftc.teamcode._deprecated.DriveTrain;
-import org.firstinspires.ftc.teamcode._deprecated.Intake;
-import org.firstinspires.ftc.teamcode._deprecated.MyRobot;
 
 import pedroPathing.constants.*;
 

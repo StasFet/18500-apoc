@@ -31,12 +31,52 @@ class Intake(val robot: Robot) : SubsystemBase() {
 
     init {
         pidf.setTolerance(INTAKE_TOLERANCE)
+        timer.reset()
     }
 
     // inaccurate name but idk what else to call it
     public fun slidesAtTarget(): Boolean {
         slide.velocity = pidf.calculate(slide.currentPosition.toDouble())
         return pidf.atSetPoint()
+    }
+
+    fun contractSlides() { pidf.setPoint = INTAKE_IN_POS }
+    fun extendSlides() { pidf.setPoint = INTAKE_OUT_POS }
+
+    fun intakeOn() { intake.power = 1.0 }
+    fun intakeOff() { intake.power = 0.0 }
+    fun intakeEject() { intake.power = -1.0 }
+
+    fun setState(state: SubsystemStates.IntakeStates) {
+        this.state = state
+        timer.reset()
+    }
+
+    public fun checkSample() : Boolean {
+        val y = detectColour(Colours.YELLOW)
+        val b = detectColour(Colours.BLUE)
+        val r = detectColour(Colours.RED)
+
+        when (intakeColour) {
+            IntakeColour.YELLOW -> return y
+            IntakeColour.BLUE -> return b
+            IntakeColour.RED -> return r
+            IntakeColour.BLUEYELLOW -> return b || y
+            IntakeColour.REDYELLOW -> return r || y
+            else -> return false
+        }
+    }
+
+    private fun detectColour(color: Colours): Boolean {
+        val r = colourSensor.red()
+        val g = colourSensor.green()
+        val b = colourSensor.blue()
+        when (color) {
+            Colours.YELLOW -> if (r > YELLOW_RED_MIN && g > YELLOW_GREEN_MIN) return true
+            Colours.BLUE -> if (b > BLUE_MIN && g < OTHER_COLOUR_MAX && r < OTHER_COLOUR_MAX) return true
+            Colours.RED -> if (r > RED_MIN && b < OTHER_COLOUR_MAX && g < OTHER_COLOUR_MAX) return true
+        }
+        return false
     }
 
     enum class IntakeColour {

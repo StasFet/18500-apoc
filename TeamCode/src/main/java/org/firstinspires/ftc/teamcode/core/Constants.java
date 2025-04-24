@@ -19,8 +19,8 @@ public class Constants {
     public static int LIFT_DOWN = 0;
 
     public static double INTAKE_TOLERANCE = 15;
-    public static int INTAKE_IN_POS = 0;
-    public static int INTAKE_OUT_POS = 1000;
+    public static double INTAKE_IN_POS = 0;
+    public static double INTAKE_OUT_POS = 1000;
 
     public static double HANG_UP_POWER = 0.5;
     public static double HANG_RETRACT_TIME = 1000;         // note: in ms

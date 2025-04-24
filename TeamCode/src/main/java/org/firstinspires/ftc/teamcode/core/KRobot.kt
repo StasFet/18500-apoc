@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import pedroPathing.constants.*
 import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.hardware.ServoEx
 import com.arcrobotics.ftclib.hardware.motors.CRServo
 import org.firstinspires.ftc.teamcode.subsystems.*
 
@@ -36,6 +37,10 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     // servos
     val hangRight: CRServo by lazy { hMap[NAME_HANGRIGHT] as CRServo }
     val hangLeft: CRServo by lazy { hMap[NAME_HANGLEFT] as CRServo }
+    val claw: ServoEx by lazy { hMap[NAME_CLAW] as ServoEx }
+    val wrist: ServoEx by lazy { hMap[NAME_WRIST] as ServoEx }
+    val armLeft: ServoEx by lazy { hMap[NAME_ARML] as ServoEx }
+    val armRight: ServoEx by lazy { hMap[NAME_ARMR] as ServoEx }
 
     // sensors
     val intakeColorSensor: RevColorSensorV3 by lazy { hMap[NAME_COLOURSENSOR] as RevColorSensorV3 }
