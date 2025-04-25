@@ -47,7 +47,7 @@ class Intake(val robot: Robot) : SubsystemBase() {
     fun intakeOff() { intake.power = 0.0 }
     fun intakeEject() { intake.power = -1.0 }
 
-    fun setState(state: SubsystemStates.IntakeStates) {
+    fun updateState(state: SubsystemStates.IntakeStates) {
         this.state = state
         timer.reset()
     }

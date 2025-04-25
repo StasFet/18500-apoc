@@ -17,11 +17,11 @@ class IntakeExtendAndReady(val robot: Robot, val intake: Intake) : CommandBase()
 
     override fun execute() {
         when (intake.state) {
-            IntakeStates.IDLE -> intake.state = IntakeStates.ACTIVATED
-            IntakeStates.ACTIVATED -> intake.state = IntakeStates.EXTENDING
+            IntakeStates.IDLE -> intake.updateState(IntakeStates.ACTIVATED)
+            IntakeStates.ACTIVATED -> intake.updateState(IntakeStates.EXTENDING)
             IntakeStates.EXTENDING -> {
                 intake.extendSlides()
-                if (intake.slidesAtTarget()) intake.setState(IntakeStates.EXTENDED)
+                if (intake.slidesAtTarget()) intake.updateState(IntakeStates.EXTENDED)
             }
             else -> {}
         }

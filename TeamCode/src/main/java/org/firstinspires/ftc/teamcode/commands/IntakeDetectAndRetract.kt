@@ -23,17 +23,17 @@ class IntakeDetectAndRetract(val intake: Intake, val robot: Robot): CommandBase(
             IntakeStates.SEARCHING_FOR_SAMPLE -> {
                 robot.intakeColorSensor.enableLed(true)
                 intake.intakeOn()
-                if (intake.checkSample()) intake.state = IntakeStates.EJECTING
+                if (intake.checkSample()) intake.updateState(IntakeStates.EJECTING)
             }
             IntakeStates.EJECTING -> {
                 robot.intakeColorSensor.enableLed(false)
                 intake.intakeEject()
                 intake.intakeOff()
-                intake.state = IntakeStates.RETRACTING
+                intake.updateState(IntakeStates.RETRACTING)
             }
             IntakeStates.RETRACTING -> {
                 intake.contractSlides()
-                if (intake.slidesAtTarget()) intake.state = IntakeStates.TRANSFER
+                if (intake.slidesAtTarget()) intake.updateState(IntakeStates.TRANSFER)
             }
             else -> {}
         }
