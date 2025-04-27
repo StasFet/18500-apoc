@@ -14,7 +14,7 @@ public class Constants {
     public static double CACHE_THRESHOLD = 0.01;
 
     // -------- MOVEMENT --------
-    public static int LIFT_TOLERANCE = 15;
+    public static double LIFT_TOLERANCE = 15;
     public static int LIFT_UP = 2300;
     public static int LIFT_DOWN = 0;
 

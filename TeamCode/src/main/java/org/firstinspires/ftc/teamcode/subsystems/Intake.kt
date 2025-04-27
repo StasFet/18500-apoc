@@ -27,7 +27,7 @@ class Intake(val robot: Robot) : SubsystemBase() {
     val Kd = 0.1;
     val Kf = 0.0001;
 
-    val pidf: PIDFController = PIDFController(Kp, Ki, Kd, Kf)
+    private val pidf: PIDFController = PIDFController(Kp, Ki, Kd, Kf)
 
     init {
         pidf.setTolerance(INTAKE_TOLERANCE)

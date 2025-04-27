@@ -34,11 +34,13 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val intakeSpin: DcMotorEx by lazy { hMap[NAME_INTAKE] as DcMotorEx }
     val intakeSlide: DcMotorEx by lazy { hMap[NAME_INTSLIDE] as DcMotorEx }
 
+    val vslide1: DcMotorEx by lazy { hMap[NAME_VSLIDE1] as DcMotorEx }
+    val vslide2: DcMotorEx by lazy { hMap[NAME_VSLIDE2] as DcMotorEx }
+
     // servos
     val hangRight: CRServo by lazy { hMap[NAME_HANGRIGHT] as CRServo }
     val hangLeft: CRServo by lazy { hMap[NAME_HANGLEFT] as CRServo }
     val claw: ServoEx by lazy { hMap[NAME_CLAW] as ServoEx }
-    val wrist: ServoEx by lazy { hMap[NAME_WRIST] as ServoEx }
     val armLeft: ServoEx by lazy { hMap[NAME_ARML] as ServoEx }
     val armRight: ServoEx by lazy { hMap[NAME_ARMR] as ServoEx }
 

@@ -7,11 +7,14 @@ import org.firstinspires.ftc.teamcode.core.Robot
 class Outtake(val robot: Robot): SubsystemBase() {
 
     val claw = robot.claw;
-    val wrist = robot.wrist;
     val armLeft = robot.armLeft;
     val armRight = robot.armRight;
 
-    fun clawOpen() {
-        claw.position = CLAW_OPEN
+    public fun clawOpen() { claw.position = CLAW_OPEN }
+    public fun clawClose() { claw.position = CLAW_CLOSED }
+
+    public fun setPosition(pos: Double) {
+        armLeft.position = 1-pos+ARM_OFFSET
+        armRight.position = pos
     }
 }
