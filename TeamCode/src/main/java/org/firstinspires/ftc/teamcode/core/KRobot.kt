@@ -26,10 +26,10 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val gpDrive: GamepadEx by lazy { GamepadEx(g2) }
 
     // motors
-    val fr: CachedMotorEx by lazy { CachedMotorEx(hMap, NAME_FR) }
-    val fl: CachedMotorEx by lazy { CachedMotorEx(hMap, NAME_FL) }
-    val br: CachedMotorEx by lazy { CachedMotorEx(hMap, NAME_BR) }
-    val bl: CachedMotorEx by lazy { CachedMotorEx(hMap, NAME_BL) }
+    val fr: CachingMotorEx by lazy { CachingMotorEx(hMap, NAME_FR) }
+    val fl: CachingMotorEx by lazy { CachingMotorEx(hMap, NAME_FL) }
+    val br: CachingMotorEx by lazy { CachingMotorEx(hMap, NAME_BR) }
+    val bl: CachingMotorEx by lazy { CachingMotorEx(hMap, NAME_BL) }
 
     val intakeSpin: DcMotorEx by lazy { hMap[NAME_INTAKE] as DcMotorEx }
     val intakeSlide: DcMotorEx by lazy { hMap[NAME_INTSLIDE] as DcMotorEx }

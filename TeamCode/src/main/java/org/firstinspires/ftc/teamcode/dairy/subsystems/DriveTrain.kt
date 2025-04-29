@@ -9,6 +9,7 @@ import dev.frozenmilk.dairy.core.dependency.annotation.SingleAnnotation
 import dev.frozenmilk.dairy.core.wrapper.Wrapper
 import dev.frozenmilk.mercurial.commands.Lambda
 import dev.frozenmilk.mercurial.subsystems.Subsystem
+import org.firstinspires.ftc.teamcode.core.CachingMotorEx
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import java.lang.annotation.Inherited
 import kotlin.math.abs
@@ -24,25 +25,24 @@ object DriveTrain: Subsystem {
 
     override var dependency: Dependency<*> = Subsystem.DEFAULT_DEPENDENCY and SingleAnnotation(Attach::class.java)
 
-    private val fl: DcMotorEx by subsystemCell { FeatureRegistrar.activeOpMode.hardwareMap.get(DcMotorEx::class.java, NAME_FL) }
-    private val bl: DcMotorEx by subsystemCell { FeatureRegistrar.activeOpMode.hardwareMap.get(DcMotorEx::class.java, NAME_BL) }
-    private val fr: DcMotorEx by subsystemCell { FeatureRegistrar.activeOpMode.hardwareMap.get(DcMotorEx::class.java, NAME_FR) }
-    private val br: DcMotorEx by subsystemCell { FeatureRegistrar.activeOpMode.hardwareMap.get(DcMotorEx::class.java, NAME_BR) }
+    private val fr: CachingMotorEx by subsystemCell { CachingMotorEx(FeatureRegistrar.activeOpMode.hardwareMap, NAME_FR) }
+    private val fl: CachingMotorEx by subsystemCell { CachingMotorEx(FeatureRegistrar.activeOpMode.hardwareMap, NAME_FL) }
+    private val br: CachingMotorEx by subsystemCell { CachingMotorEx(FeatureRegistrar.activeOpMode.hardwareMap, NAME_BR) }
+    private val bl: CachingMotorEx by subsystemCell { CachingMotorEx(FeatureRegistrar.activeOpMode.hardwareMap, NAME_BL)}
     private val gp: GamepadEx by subsystemCell { GamepadEx(FeatureRegistrar.activeOpMode.gamepad1) }
 
     // init code (constructor in FTCLib)
-    override fun preUserInitHook(opMode: Wrapper) {
+    override fun postUserInitHook(opMode: Wrapper) {
         init()
     }
 
     fun rcDrive(): Lambda {
-        return Lambda("rcDrive")
+                return Lambda("rcDrive")
             .addRequirements(this)
             .setInit { init() }
             .setExecute { rcDriveExecute() }
             .setFinish { false }
             .setInterruptible(false)
-            .setRunStates(Wrapper.OpModeState.ACTIVE)
     }
 
     private fun init() {
@@ -58,7 +58,6 @@ object DriveTrain: Subsystem {
     }
 
     private fun rcDriveExecute() {
-        //if (FeatureRegistrar.activeOpMode.) //extra check to not run during init((
         val y = gp.leftY
         val x = gp.leftX * 1.1 // Counteract imperfect strafing
         val rx = gp.rightX
@@ -73,5 +72,6 @@ object DriveTrain: Subsystem {
         bl.power = backLeftPower * REAR_DT_MULTI
         fr.power = frontRightPower * FRONT_DT_MULTI
         br.power = backRightPower * REAR_DT_MULTI
+        FeatureRegistrar.activeOpMode.telemetry.addData("fl power:", fl.power)
     }
 }

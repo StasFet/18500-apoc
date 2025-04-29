@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode.opmodes
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import dev.frozenmilk.dairy.core.util.supplier.logical.EnhancedBooleanSupplier
 import dev.frozenmilk.dairy.pasteurized.SDKGamepad
 import dev.frozenmilk.mercurial.Mercurial
+import dev.frozenmilk.mercurial.bindings.BoundBooleanSupplier
 import dev.frozenmilk.mercurial.bindings.BoundGamepad
 import dev.frozenmilk.mercurial.commands.Lambda
 import dev.frozenmilk.mercurial.commands.util.StateMachine
@@ -19,9 +21,9 @@ import org.firstinspires.ftc.teamcode.state.SubsystemStates.OuttakeState
 @TeleOp(name = "Mercurial TeleOp")
 class MercTele : OpMode() {
     override fun init() {
-
         val boundGamepad = BoundGamepad(SDKGamepad(gamepad1))
-        DriveTrain.rcDrive()
+
+        DriveTrain.rcDrive().schedule()
 
         val intakeStateMachine = StateMachine(SubsystemStates.IntakeStates.IDLE)
             .withState(IntakeStates.IDLE) { state: RefCell<IntakeStates>, name:String ->
@@ -48,6 +50,6 @@ class MercTele : OpMode() {
     }
 
     override fun loop() {
-
+        //
     }
 }

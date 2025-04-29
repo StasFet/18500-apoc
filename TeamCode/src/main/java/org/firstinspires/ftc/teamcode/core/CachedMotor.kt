@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import kotlin.math.abs
 
-class CachedMotorEx(hardwareMap: HardwareMap, name: String): DcMotorEx by hardwareMap.get(DcMotorEx::class.java, name) {
+class CachingMotorEx(hardwareMap: HardwareMap, name: String): DcMotorEx by hardwareMap.get(DcMotorEx::class.java, name) {
 
     private val motor: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, name)
     private var lastPower: Double = 0.0
