@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.state;
+package org.firstinspires.ftc.teamcode.core;
 
 public class SubsystemStates {
     public enum OuttakeState {
@@ -10,6 +10,7 @@ public class SubsystemStates {
         ACTIVATED,
         EXTENDING,
         EXTENDED,
+        EXTENDED_AND_DOWN,
         SEARCHING_FOR_SAMPLE,
         EJECTING,
         RETRACTING,

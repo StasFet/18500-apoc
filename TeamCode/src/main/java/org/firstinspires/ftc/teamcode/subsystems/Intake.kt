@@ -3,22 +3,27 @@ package org.firstinspires.ftc.teamcode.subsystems
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.PIDFController
+import com.arcrobotics.ftclib.hardware.ServoEx
+import com.acmerobotics.dashboard.FtcDashboard
 import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.teamcode._deprecated.Intake.IntakeColour
 import org.firstinspires.ftc.teamcode.core.*
 import org.firstinspires.ftc.teamcode.core.Constants.*
-import org.firstinspires.ftc.teamcode.state.SubsystemStates
 
 @Config
-class Intake(val robot: Robot) : SubsystemBase() {
+public class Intake(val robot: Robot) : SubsystemBase() {
     val intake: DcMotorEx = robot.intakeSpin
     val slide: DcMotorEx = robot.intakeSlide
+    val leftServo: ServoEx = robot.intakeLeft
+    val rightServo: ServoEx = robot.intakeRight
     val colourSensor: RevColorSensorV3 = robot.intakeColorSensor
     val timer: ElapsedTime = ElapsedTime()
 
+    val dashboard: FtcDashboard = FtcDashboard.getInstance()
+
     var state = SubsystemStates.IntakeStates.IDLE
+        set(value) = updateState(value)
     var intakeColour: IntakeColour = robot.intakeColor
     var intakeBusy = false
 
@@ -46,6 +51,11 @@ class Intake(val robot: Robot) : SubsystemBase() {
     fun intakeOn() { intake.power = 1.0 }
     fun intakeOff() { intake.power = 0.0 }
     fun intakeEject() { intake.power = -1.0 }
+
+    fun wristToPos(pos: Double) {
+        leftServo.position = pos
+        rightServo.position = 1 - pos + INTAKE_WRIST_OFFSET
+    }
 
     fun updateState(state: SubsystemStates.IntakeStates) {
         this.state = state
@@ -92,4 +102,5 @@ class Intake(val robot: Robot) : SubsystemBase() {
         BLUE,
         YELLOW
     }
+
 }

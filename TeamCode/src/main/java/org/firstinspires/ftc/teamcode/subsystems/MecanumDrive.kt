@@ -28,6 +28,11 @@ class MecanumDrive(val robot: Robot) : SubsystemBase() {
         fr.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         bl.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
         br.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+
+        fr.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        fl.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        br.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        bl.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
     public fun rcDrive() {

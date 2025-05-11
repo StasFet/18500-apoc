@@ -14,18 +14,27 @@ public class Constants {
     public static double CACHE_THRESHOLD = 0.01;
 
     // -------- MOVEMENT --------
+
+    // lift
     public static double LIFT_TOLERANCE = 15;
     public static int LIFT_UP = 2300;
     public static int LIFT_DOWN = 0;
 
+    // intake
     public static double INTAKE_TOLERANCE = 15;
     public static double INTAKE_IN_POS = 0;
     public static double INTAKE_OUT_POS = 1000;
+    public static double INTAKE_WRIST_UP = 0.5;
+    public static double INTAKE_WRIST_DOWN = 0.4;
+    public static double INTAKE_WRIST_TRANSFER = 0.6;
+    public static double INTAKE_WRIST_OFFSET = 0.0;
 
-    public static double HANG_UP_POWER = 0.5;
-    public static double HANG_RETRACT_TIME = 1000;         // note: in ms
-    public static double HANG_EXTEND_TIME = 1000;
+    // hang
+    public static double HANG_REV_UP = 9;
+    public static double HANG_REV_HANGING = 5;
+    public static double HANG_POWER = 0.9;
 
+    // outtake
     public static double CLAW_OPEN = 1;
     public static double CLAW_CLOSED = 0;
     public static double WRIST_SPEC_WALL = 0;
@@ -66,4 +75,8 @@ public class Constants {
     public static String NAME_ARMR = "arm_right";
     public static String NAME_HANGRIGHT = "hangRight";
     public static String NAME_HANGLEFT = "hangLeft";
+    public static String NAME_HANGRIGHTENC = "hangRightEncoder";
+    public static String NAME_HANGLEFTENC = "hangLeftEncoder";
+    public static String NAME_INTAKERIGHT = "intakeRight";
+    public static String NAME_INTAKELEFT = "intakeLeft";
 }

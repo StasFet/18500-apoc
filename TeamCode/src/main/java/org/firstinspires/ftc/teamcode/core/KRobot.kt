@@ -10,6 +10,7 @@ import pedroPathing.constants.*
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.arcrobotics.ftclib.hardware.ServoEx
 import com.arcrobotics.ftclib.hardware.motors.CRServo
+import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder
 import org.firstinspires.ftc.teamcode.subsystems.*
 
 class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, val g2: Gamepad) {
@@ -43,9 +44,13 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val claw: ServoEx by lazy { hMap[NAME_CLAW] as ServoEx }
     val armLeft: ServoEx by lazy { hMap[NAME_ARML] as ServoEx }
     val armRight: ServoEx by lazy { hMap[NAME_ARMR] as ServoEx }
+    val intakeLeft: ServoEx by lazy { hMap[NAME_INTAKELEFT] as ServoEx}
+    val intakeRight: ServoEx by lazy { hMap[NAME_INTAKERIGHT] as ServoEx }
 
     // sensors
     val intakeColorSensor: RevColorSensorV3 by lazy { hMap[NAME_COLOURSENSOR] as RevColorSensorV3 }
+    val hangRightEncoder: AnalogInput by lazy { hMap[NAME_HANGRIGHTENC] as AnalogInput }
+    val hangLeftEncoder: AnalogInput by lazy { hMap[NAME_HANGRIGHTENC] as AnalogInput }
 
     init {
         initPinpoint()

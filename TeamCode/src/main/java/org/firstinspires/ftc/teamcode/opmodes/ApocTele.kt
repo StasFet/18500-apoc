@@ -8,11 +8,10 @@ import com.pedropathing.util.Constants
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.commands.*;
 import org.firstinspires.ftc.teamcode.core.Robot
-import org.firstinspires.ftc.teamcode.state.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.*
 import pedroPathing.constants.*
 
-@TeleOp(name="Apoc Teleop")
+@TeleOp(name="APOC Teleop")
 class ApocTele() : CommandOpMode() {
 
     lateinit var robot: Robot
@@ -29,11 +28,11 @@ class ApocTele() : CommandOpMode() {
         odo = robot.odo
         follower = robot.follower
         dt = MecanumDrive(robot)
-        intake = Intake(robot)
+        //intake = Intake(robot)
         drive = Drive(dt, robot)
 
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
-        register(intake, dt);
+        register( dt);
         dt.defaultCommand = drive;
     }
 
@@ -42,20 +41,21 @@ class ApocTele() : CommandOpMode() {
         follower.update()
         runtimeControls()
         super.run()
+        telemetry.update()
     }
 
     private fun runtimeControls() {
-        when (intake.state) {
-            SubsystemStates.IntakeStates.IDLE -> {
-                //if button pressed, schedule IntakeExtendAndReady
-            }
-            SubsystemStates.IntakeStates.EXTENDED -> {
-                //if button pressed, schedule IntakeDetectAndRetract
-            }
-            SubsystemStates.IntakeStates.TRANSFER -> {
-                //if button pressed, schedule TransferAndReady
-            }
-            else -> {}
-        }
+//        when (intake.state) {
+//            SubsystemStates.IntakeStates.IDLE -> {
+//                //if button pressed, schedule IntakeExtendAndReady
+//            }
+//            SubsystemStates.IntakeStates.EXTENDED_AND_DOWN -> {
+//                //if button pressed, schedule IntakeDetectAndRetract
+//            }
+//            SubsystemStates.IntakeStates.TRANSFER -> {
+//                //if button pressed, schedule TransferAndReady
+//            }
+//            else -> {}
+//        }
     }
 }

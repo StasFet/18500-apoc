@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode._deprecated;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode._deprecated.*;
-import org.firstinspires.ftc.teamcode.state.SubsystemStates;
+import org.firstinspires.ftc.teamcode.core.SubsystemStates;
 
 //@Config
 public class Intake extends SubsystemBase {
