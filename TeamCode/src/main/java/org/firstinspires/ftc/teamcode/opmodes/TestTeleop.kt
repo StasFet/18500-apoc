@@ -1,13 +1,20 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.ValueProvider
 import com.arcrobotics.ftclib.gamepad.GamepadEx
+import com.arcrobotics.ftclib.gamepad.GamepadKeys
+import com.arcrobotics.ftclib.hardware.ServoEx
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.*
 import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
+import com.qualcomm.robotcore.hardware.ServoImplEx
 import org.firstinspires.ftc.teamcode.core.Constants.*
+import org.firstinspires.ftc.teamcode.core.PIDTune
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -16,68 +23,44 @@ class TestTeleop() : LinearOpMode() {
 
     override fun runOpMode() {
 
-        val hangLeft: CRServo = hardwareMap.get(CRServo::class.java, NAME_HANGLEFT)
-        val hangRight: CRServo = hardwareMap.get(CRServo::class.java, NAME_HANGRIGHT)
-        val encoderLeft: AnalogInput = hardwareMap.get(AnalogInput::class.java, NAME_HANGLEFTENC)
         val gp1: GamepadEx = GamepadEx(gamepad1)
 
-        val fr: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_FR)
-        val fl: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_FL)
-        val br: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_BR)
-        val bl: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_BL)
+        val intake: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_INTAKE)
+        val intakeSlide: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_INTSLIDE)
 
-        var revolutions = 0
-        var lastPos = 0.0
+        val intakeLeft: ServoImplEx = hardwareMap.get(ServoImplEx::class.java, NAME_INTAKELEFT)
+        val intakeRight: ServoImplEx = hardwareMap.get(ServoImplEx::class.java, NAME_INTAKERIGHT)
 
-        var statelol = state.IDLE
+        val dashboard: FtcDashboard = FtcDashboard.getInstance()
+
+        intakeSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         waitForStart()
+
+        if (isStopRequested) return
+
+
         while (opModeIsActive()) {
-            //hangLeft.power = -gp1.leftY
-            //hangRight.power = gp1.rightY
-            //caca radit poo
-            when (statelol) {
-                state.IDLE -> {
-                    if (gamepad1.a) statelol = state.ASCENDING
-                }
+            dashboard.updateConfig()
 
-                state.ASCENDING -> {
-                    if (revolutions < 9) {
-                        hangLeft.power = -1.0
-                        hangRight.power = -1.0
-                    } else statelol = state.UP
-                }
+            intakeRight.position = PIDTune.intake
+            intakeLeft.position = 1 - PIDTune.intake
 
-                state.UP -> {
-                    if (gamepad1.b) statelol = state.DESCENDING
-                    hangLeft.power = 0.0
-                    hangRight.power = 0.0
-                }
-
-                state.DESCENDING -> {
-                    if (revolutions > 5) {
-                        hangLeft.power = 1.0
-                        hangRight.power = 1.0
-                    } else {
-                        statelol = state.DONE
-                    }
-                }
-
-                else -> {}
+            if (gamepad1.a) {
+                intake.power = -1.0
+            } else if (gamepad1.y) {
+                intake.power = 1.0
+            } else {
+                intake.power = 0.0
             }
 
-            val pos: Double = encoderLeft.voltage / 3.3 * 360
-            if (lastPos > 230 && pos < 100) revolutions++
-            if (lastPos < 100 && pos > 230) revolutions--
+            if (gamepad1.y) {
+                intake.power = 1.0
+            }
 
-            telemetry.addData("Encoder: ", pos)
-            telemetry.addData("Revolutions:", revolutions)
-            //telemetry.addData("Revolutions: ", encoderLeft.)
+            telemetry.addData("Intake slide pos: ", intakeSlide.currentPosition)
+            telemetry.addData("Intake wrist pos:", intakeRight.position)
+            telemetry.addData("dashboard pos:", PIDTune.intake)
             telemetry.update()
-            lastPos = pos
         }
-    }
-
-    enum class state {
-        IDLE, ASCENDING, UP, DESCENDING, DONE
     }
 }

@@ -7,5 +7,9 @@ class LoopTimeMonitor() {
 
     public fun startTimer() { timer = ElapsedTime() }
 
-    //public fun
+    public fun checkTime(): Long {
+        val time: Long = timer.nanoseconds()
+        timer.reset()
+        return time
+    }
 }

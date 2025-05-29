@@ -11,12 +11,12 @@ import kotlin.math.max
 
 class MecanumDrive(val robot: Robot) : SubsystemBase() {
 
-    val fl = robot.fl
-    val fr = robot.fr
-    val bl = robot.bl
-    val br = robot.br
-    val gp: GamepadEx = robot.gpDrive
-    val odo = robot.odo
+    private val fl = robot.fl
+    private val fr = robot.fr
+    private val bl = robot.bl
+    private val br = robot.br
+    private val gp: GamepadEx = robot.gpDrive
+    private val odo = robot.odo
 
     init {
         fr.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER

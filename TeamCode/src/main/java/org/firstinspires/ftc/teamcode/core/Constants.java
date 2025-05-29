@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class Constants {
+
     // -------- GENERAL --------
     public static boolean UPDATE_ODO = true;
 
@@ -21,37 +22,44 @@ public class Constants {
     public static int LIFT_DOWN = 0;
 
     // intake
-    public static double INTAKE_TOLERANCE = 15;
-    public static double INTAKE_IN_POS = 0;
-    public static double INTAKE_OUT_POS = 1000;
-    public static double INTAKE_WRIST_UP = 0.5;
-    public static double INTAKE_WRIST_DOWN = 0.4;
+    public static double INTAKE_TOLERANCE = 10;
+    public static double INTAKE_IN_POS = 10;
+    public static double INTAKE_OUT_POS = 640;
+    public static double INTAKE_EJECT_POS = 0.27;
+    public static double INTAKE_WRIST_DOWN = 0.22;
     public static double INTAKE_WRIST_TRANSFER = 0.6;
-    public static double INTAKE_WRIST_OFFSET = 0.0;
+    public static double INTAKE_STOP_OPEN = 0.53;
+    public static double INTAKE_STOP_CLOSED = 0.02;
 
     // hang
     public static double HANG_REV_UP = 9;
     public static double HANG_REV_HANGING = 5;
-    public static double HANG_POWER = 0.9;
+    public static double HANG_POWER_COEFF = 0.9;
+
 
     // outtake
-    public static double CLAW_OPEN = 1;
-    public static double CLAW_CLOSED = 0;
+    public static double CLAW_OPEN = 0.7;
+    public static double CLAW_CLOSED = 0.5;
     public static double WRIST_SPEC_WALL = 0;
     public static double WRIST_SPEC_BAR = 0;
     public static double WRIST_TRANSFER = 0;
     public static double ARM_IDLE = 0;
+    public static double ARM_SPEC = 0.08;
     public static double ARM_TRANSFER = 0;
+    public static double ARM_LOW_BAR = 0.7;
     public static double ARM_RISE = 0;
     public static double ARM_DEPOSIT = 0;
     public static double ARM_OFFSET = 0;
 
     // -------- COLOUR SENSOR --------
-    public static double YELLOW_RED_MIN = 150;
-    public static double YELLOW_GREEN_MIN = 150;
-    public static double RED_MIN = 150;
-    public static double BLUE_MIN = 150;
-    public static double OTHER_COLOUR_MAX = 100;
+    public static int[] CS_RED_RGB = {630, 335, 153};
+    public static int[] CS_RED_TOLERANCE = {175, 90, 55};
+
+    public static int[] CS_YELLOW_RGB = {1075, 1300, 270};
+    public static int[] CS_YELLOW_TOLERANCE = {260, 325, 60};
+
+    public static int[] CS_BLUE_RGB = {125, 252, 605};
+    public static int[] CS_BLUE_TOLERANCE = {30, 55, 135};
 
 // -----------------------------------------------------------------------------
     // -------- HARDWARE NAMES --------
@@ -67,10 +75,11 @@ public class Constants {
     public static String NAME_VSLIDE2 = "vslideRight";
     public static String NAME_INTSLIDE = "hslide";
     public static String NAME_INTAKE = "intake";
+    public static String NAME_INTAKE_STOP = "intakeStop";   // 0.53 - open, 0.02 - closed
     public static String NAME_HANGL = "hang_left";
     public static String NAME_HANGR = "hang_right";
     public static String NAME_CLAW = "claw";
-    public static String NAME_WRIST = "wrist";
+    public static String NAME_ARM_LINKAGE = "armLinkage";
     public static String NAME_ARML = "arm_left";
     public static String NAME_ARMR = "arm_right";
     public static String NAME_HANGRIGHT = "hangRight";

@@ -20,7 +20,7 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val odo: GoBildaPinpointDriver by lazy { hMap[NAME_PINPOINT] as GoBildaPinpointDriver }
     val follower: Follower by lazy { Follower(hMap, FConstants::class.java, LConstants::class.java) }
     val t: Telemetry = telemetry
-    val intakeColor: Intake.IntakeColour = Intake.IntakeColour.YELLOW
+    lateinit var cols: Array<Intake.Colours>
 
     // gamepads
     val gpGeneral: GamepadEx by lazy { GamepadEx(g1) }
@@ -41,11 +41,12 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     // servos
     val hangRight: CRServo by lazy { hMap[NAME_HANGRIGHT] as CRServo }
     val hangLeft: CRServo by lazy { hMap[NAME_HANGLEFT] as CRServo }
-    val claw: ServoEx by lazy { hMap[NAME_CLAW] as ServoEx }
-    val armLeft: ServoEx by lazy { hMap[NAME_ARML] as ServoEx }
-    val armRight: ServoEx by lazy { hMap[NAME_ARMR] as ServoEx }
-    val intakeLeft: ServoEx by lazy { hMap[NAME_INTAKELEFT] as ServoEx}
-    val intakeRight: ServoEx by lazy { hMap[NAME_INTAKERIGHT] as ServoEx }
+    val claw: ServoImplEx by lazy { hMap[NAME_CLAW] as ServoImplEx }
+    val armLeft: ServoImplEx by lazy { hMap[NAME_ARML] as ServoImplEx }
+    val armRight: ServoImplEx by lazy { hMap[NAME_ARMR] as ServoImplEx }
+    val intakeLeft: Servo by lazy { hMap[NAME_INTAKELEFT] as Servo}
+    val intakeRight: Servo by lazy { hMap[NAME_INTAKERIGHT] as Servo }
+    val intakeStopper: Servo by lazy { hMap[NAME_INTAKE_STOP] as Servo}
 
     // sensors
     val intakeColorSensor: RevColorSensorV3 by lazy { hMap[NAME_COLOURSENSOR] as RevColorSensorV3 }
@@ -83,5 +84,12 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
         fl.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         br.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         bl.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+    }
+
+    fun setColours(vararg cols: Intake.Colours) {
+        this.cols = emptyArray()
+        for (col in cols) {
+            this.cols += col
+        }
     }
 }
