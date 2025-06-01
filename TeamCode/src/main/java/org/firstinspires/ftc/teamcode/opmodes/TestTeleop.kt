@@ -11,8 +11,10 @@ import com.qualcomm.robotcore.hardware.AnalogInput
 import com.qualcomm.robotcore.hardware.CRServo
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorImplEx
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.ServoImplEx
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.PIDTune
 import kotlin.math.abs
@@ -25,41 +27,46 @@ class TestTeleop() : LinearOpMode() {
 
         val gp1: GamepadEx = GamepadEx(gamepad1)
 
+        val slideR = hardwareMap.get(DcMotorEx::class.java, NAME_VSLIDER)
+        val slideL = hardwareMap.get(DcMotorEx::class.java, NAME_VSLIDEL)
+
+        slideR.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        slideL.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        slideR.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        slideL.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        slideR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        slideL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+
         val intake: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_INTAKE)
-        val intakeSlide: DcMotorEx = hardwareMap.get(DcMotorEx::class.java, NAME_INTSLIDE)
+        val intakeSlide: DcMotorImplEx = hardwareMap.get(DcMotorImplEx::class.java, NAME_INTSLIDE)
 
         val intakeLeft: ServoImplEx = hardwareMap.get(ServoImplEx::class.java, NAME_INTAKELEFT)
         val intakeRight: ServoImplEx = hardwareMap.get(ServoImplEx::class.java, NAME_INTAKERIGHT)
 
         val dashboard: FtcDashboard = FtcDashboard.getInstance()
-
-        intakeSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         waitForStart()
 
         if (isStopRequested) return
 
 
         while (opModeIsActive()) {
-            dashboard.updateConfig()
-
-            intakeRight.position = PIDTune.intake
-            intakeLeft.position = 1 - PIDTune.intake
+            // -930
 
             if (gamepad1.a) {
-                intake.power = -1.0
-            } else if (gamepad1.y) {
-                intake.power = 1.0
+                slideR.targetPosition = -930
+                slideR.mode = DcMotor.RunMode.RUN_TO_POSITION
+                slideR.power = 0.6
+            } else if (gamepad1.b) {
+                slideR.targetPosition = 0
+                slideR.mode = DcMotor.RunMode.RUN_TO_POSITION
+                slideR.power = 0.6
             } else {
-                intake.power = 0.0
+                slideR.targetPosition = slideR.currentPosition
             }
+            slideL.power = -slideR.power
 
-            if (gamepad1.y) {
-                intake.power = 1.0
-            }
-
-            telemetry.addData("Intake slide pos: ", intakeSlide.currentPosition)
-            telemetry.addData("Intake wrist pos:", intakeRight.position)
-            telemetry.addData("dashboard pos:", PIDTune.intake)
+            telemetry.addData("Slide left", slideL.currentPosition)
+            telemetry.addData("Slide right", slideR.currentPosition)
             telemetry.update()
         }
     }

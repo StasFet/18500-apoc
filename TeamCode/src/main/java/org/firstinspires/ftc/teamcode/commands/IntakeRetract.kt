@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands
 
 import com.arcrobotics.ftclib.command.CommandBase
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.Intake
@@ -12,8 +13,9 @@ class IntakeRetract(val intake: Intake) : CommandBase() {
     }
 
     override fun initialize() {
+        intake.slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
         intake.state = SubsystemStates.IntakeStates.RETRACTING
-        intake.contractionSetPoint()
+        intake.customSetPoint(INTAKE_TRANSFER_POS)
         intake.intakeOff()
         intake.wristToPos(INTAKE_WRIST_TRANSFER)
     }
@@ -23,11 +25,15 @@ class IntakeRetract(val intake: Intake) : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        intake.slide.power = 0.001
+        //intake.slide.power = 0.001
         if (intake.slidesAtSetPoint()) {
             intake.state = SubsystemStates.IntakeStates.IDLE
             return true
         }
         return false
+    }
+
+    override fun end(interrupted: Boolean) {
+        intake.brake()
     }
 }

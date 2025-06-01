@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands
 
 import com.arcrobotics.ftclib.command.CommandBase
+import org.firstinspires.ftc.teamcode.core.Constants.INTAKE_WRIST_DOWN
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.Intake
 
@@ -11,14 +12,15 @@ class IntakeWaitForSample(val intake: Intake) : CommandBase() {
 
     override fun initialize() {
         intake.state = SubsystemStates.IntakeStates.ACTIVATED
+        intake.wristToPos(INTAKE_WRIST_DOWN)
         intake.closeIntakeStopper()
         intake.intakeOn()
+        intake.brake()
     }
 
     override fun execute() {
-        intake.updateVelocity()
-        if (!intake.isEjecting) intake.intakeOn()
-        else intake.intakeEject()
+        if (intake.isEjecting || intake.isStalling()) intake.intakeEject()
+        else intake.intakeOn()
     }
 
     override fun isFinished(): Boolean {

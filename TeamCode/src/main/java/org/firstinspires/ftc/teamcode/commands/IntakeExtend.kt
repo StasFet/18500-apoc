@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands
 
 import com.arcrobotics.ftclib.command.CommandBase
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
@@ -13,6 +14,7 @@ class IntakeExtend(val intake: Intake) : CommandBase() {
     }
 
     override fun initialize() {
+        intake.slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
         intake.state = SubsystemStates.IntakeStates.EXTENDING
         intake.extensionSetPoint()
         intake.wristToPos(0.4)
@@ -30,5 +32,9 @@ class IntakeExtend(val intake: Intake) : CommandBase() {
             return true
         }
         return false
+    }
+
+    override fun end(interrupted: Boolean) {
+        intake.brake()
     }
 }

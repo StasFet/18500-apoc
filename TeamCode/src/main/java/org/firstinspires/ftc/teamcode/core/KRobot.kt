@@ -8,9 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import pedroPathing.constants.*
 import com.arcrobotics.ftclib.gamepad.GamepadEx
-import com.arcrobotics.ftclib.hardware.ServoEx
 import com.arcrobotics.ftclib.hardware.motors.CRServo
-import com.arcrobotics.ftclib.hardware.motors.Motor.Encoder
 import org.firstinspires.ftc.teamcode.subsystems.*
 
 class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, val g2: Gamepad) {
@@ -35,8 +33,8 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val intakeSpin: DcMotorEx by lazy { hMap[NAME_INTAKE] as DcMotorEx }
     val intakeSlide: DcMotorEx by lazy { hMap[NAME_INTSLIDE] as DcMotorEx }
 
-    val vslide1: DcMotorEx by lazy { hMap[NAME_VSLIDE1] as DcMotorEx }
-    val vslide2: DcMotorEx by lazy { hMap[NAME_VSLIDE2] as DcMotorEx }
+    val vslidel: DcMotorEx by lazy { hMap[NAME_VSLIDEL] as DcMotorEx }
+    val vslider: DcMotorEx by lazy { hMap[NAME_VSLIDER] as DcMotorEx }
 
     // servos
     val hangRight: CRServo by lazy { hMap[NAME_HANGRIGHT] as CRServo }

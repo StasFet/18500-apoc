@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.core.*
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import kotlin.math.abs
@@ -32,6 +33,7 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     val cols = robot.cols
     var isEjecting = false
     var cachedPower = 0.0
+    var latestColour = "NONE"
 
     val dashboard: FtcDashboard = FtcDashboard.getInstance()
 
@@ -42,7 +44,7 @@ public class Intake(val robot: Robot) : SubsystemBase() {
 
     init {
         colourSensor.initialize()
-        slide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+        //slide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
         slide.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         controller.setTolerance(INTAKE_TOLERANCE)
@@ -56,26 +58,26 @@ public class Intake(val robot: Robot) : SubsystemBase() {
 
     fun slidesAtSetPoint(): Boolean = controller.atSetPoint()
 
-    fun contractionSetPoint() { controller.setPoint = INTAKE_IN_POS }
-    fun extensionSetPoint() { controller.setPoint = INTAKE_OUT_POS }
-    fun customSetPoint(setPoint: Double) { controller.setPoint = setPoint }
+    fun contractionSetPoint() { customSetPoint(INTAKE_IN_POS) }
+    fun extensionSetPoint() { customSetPoint(INTAKE_OUT_POS) }
+    fun customSetPoint(setPoint: Double) {
+        //slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        controller.setPoint = setPoint
+    }
 
-    fun intakeOn() {
-        if (cachedPower != -1.0) {
-            intake.power = -1.0
-            cachedPower = -1.0
-        }
+    fun runToPos(pos: Double, power: Double) {
+        slide.targetPosition = pos.toInt()
+        slide.mode = DcMotor.RunMode.RUN_TO_POSITION
+        slide.power = power
     }
-    fun intakeOff() {
-        if (cachedPower != 0.0) {
-            intake.power = 0.0
-            cachedPower = 0.0
-        }
-    }
-    fun intakeEject() {
-        if (cachedPower != 0.3) {
-            intake.power = 0.3
-            cachedPower = 0.3
+
+    fun intakeOn() { intakeCustomPower(INTAKE_PWR) }
+    fun intakeOff() { intakeCustomPower(0.0) }
+    fun intakeEject() { intakeCustomPower(INTAKE_EJECT_PWR) }
+    fun intakeCustomPower(power: Double) {
+        if (cachedPower != power) {
+            intake.power = power
+            cachedPower = power
         }
     }
 
@@ -92,6 +94,10 @@ public class Intake(val robot: Robot) : SubsystemBase() {
         rightServo.position = pos
     }
 
+    fun brake() {
+        runToPos(slide.currentPosition.toDouble(), 1.0)
+    }
+
     fun checkColour(): Colours {
         var red = colourSensor.red()
         var green = colourSensor.green()
@@ -100,19 +106,33 @@ public class Intake(val robot: Robot) : SubsystemBase() {
             var redInTol = abs(red - CS_RED_RGB[0]) <= CS_RED_TOLERANCE[0]
             var greenInTol = abs(green - CS_RED_RGB[1]) <= CS_RED_TOLERANCE[1]
             var blueInTol = abs(blue - CS_RED_RGB[2]) <= CS_RED_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) return Colours.RED
+            if (redInTol && greenInTol && blueInTol) {
+                latestColour = "RED"
+                return Colours.RED
+            }
 
             redInTol = abs(red - CS_BLUE_RGB[0]) <= CS_BLUE_TOLERANCE[0]
             greenInTol = abs(green - CS_BLUE_RGB[1]) <= CS_BLUE_TOLERANCE[1]
             blueInTol = abs(blue - CS_BLUE_RGB[2]) <= CS_BLUE_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) return Colours.BLUE
+            if (redInTol && greenInTol && blueInTol) {
+                latestColour = "BLUE"
+                return Colours.BLUE
+            }
 
             redInTol = abs(red - CS_YELLOW_RGB[0]) <= CS_YELLOW_TOLERANCE[0]
             greenInTol = abs(green - CS_YELLOW_RGB[1]) <= CS_YELLOW_TOLERANCE[1]
             blueInTol = abs(blue - CS_YELLOW_RGB[2]) <= CS_YELLOW_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) return Colours.YELLOW
+            if (redInTol && greenInTol && blueInTol) {
+                latestColour = "YELLOW"
+                return Colours.YELLOW
+            }
 
+        latestColour = "NONE"
         return Colours.NONE
+    }
+
+    fun isStalling(): Boolean {
+        return intake.getCurrent(CurrentUnit.MILLIAMPS) >= INTAKE_STALL_CURRENT_MA
     }
 
     enum class Colours {

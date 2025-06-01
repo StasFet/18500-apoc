@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.core;
 public class SubsystemStates {
     public enum OuttakeState {
         IDLE,
+        WAITING_FOR_TRANSFER,
+
     }
 
     public enum IntakeStates {
