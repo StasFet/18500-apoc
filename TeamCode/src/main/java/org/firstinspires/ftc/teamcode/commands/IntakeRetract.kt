@@ -25,15 +25,11 @@ class IntakeRetract(val intake: Intake) : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        //intake.slide.power = 0.001
-        if (intake.slidesAtSetPoint()) {
-            intake.state = SubsystemStates.IntakeStates.IDLE
-            return true
-        }
-        return false
+        return intake.slidesAtSetPoint()
     }
 
     override fun end(interrupted: Boolean) {
+        intake.state = SubsystemStates.IntakeStates.TRANSFER
         intake.brake()
     }
 }

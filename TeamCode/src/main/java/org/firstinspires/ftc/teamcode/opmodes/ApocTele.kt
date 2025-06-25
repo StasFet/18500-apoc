@@ -112,14 +112,18 @@ class ApocTele() : CommandOpMode() {
         packet.put("Position", intake.slide.currentPosition)
         packet.put("Vert pos", lift.right.currentPosition)
         packet.put("Vert target", lift.pidf.setPoint)
-        //packet.put("Intake Current (mA)", intake.intake.getCurrent(CurrentUnit.MILLIAMPS))
+        packet.put("Intake Current", intake.intake.getCurrent(CurrentUnit.MILLIAMPS))
+        packet.put("Intake Slide Current", intake.slide.getCurrent(CurrentUnit.MILLIAMPS))
+        packet.put("Left lift current", lift.left.getCurrent(CurrentUnit.MILLIAMPS))
+        packet.put("Right lift current", lift.right.getCurrent(CurrentUnit.MILLIAMPS))
         dashboard.sendTelemetryPacket(packet)
 
         //telemetry.addData("")
         //telemetry.addData("Intake Current", intake.intake.getCurrent(CurrentUnit.MILLIAMPS))
         //telemetry.addData("Colour detected", intake.latestColour)
         telemetry.addData("Intake position", intake.slide.currentPosition)
-        telemetry.addData("Intake power", intake.slide.power)
+        telemetry.addData("Intake slide power", intake.slide.power)
+        telemetry.addData("Intake power", intake.intake.power)
         telemetry.update()
     }
 }

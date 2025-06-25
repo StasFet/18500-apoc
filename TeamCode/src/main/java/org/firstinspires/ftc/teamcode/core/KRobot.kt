@@ -42,6 +42,7 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
     val claw: ServoImplEx by lazy { hMap[NAME_CLAW] as ServoImplEx }
     val armLeft: ServoImplEx by lazy { hMap[NAME_ARML] as ServoImplEx }
     val armRight: ServoImplEx by lazy { hMap[NAME_ARMR] as ServoImplEx }
+    val armLinkage: ServoImplEx by lazy { hMap[NAME_ARM_LINKAGE] as ServoImplEx }
     val intakeLeft: Servo by lazy { hMap[NAME_INTAKELEFT] as Servo}
     val intakeRight: Servo by lazy { hMap[NAME_INTAKERIGHT] as Servo }
     val intakeStopper: Servo by lazy { hMap[NAME_INTAKE_STOP] as Servo}

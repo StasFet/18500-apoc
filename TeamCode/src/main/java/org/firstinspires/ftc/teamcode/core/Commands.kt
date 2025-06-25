@@ -19,24 +19,34 @@ import org.firstinspires.ftc.teamcode.subsystems.*
 
 class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     fun retractIntake(intake: Intake): CommandBase {
-        return SequentialCommandGroup(
+        // if extended, do stuff
+        return ConditionalCommand(
+            SequentialCommandGroup(
             IntakeWaitForSample(intake),
-            IntakeRetract(intake)
-        )
+            IntakeRetract(intake)),
+            // otherwise do nothing!!
+            WaitCommand(1),
+            {intake.state == SubsystemStates.IntakeStates.EXTENDED})
     }
 
     fun transfer(): Command {
-        return SequentialCommandGroup(
-            PrepForTransfer(intake, outtake),
-            InstantCommand({
-                intake.intakeCustomPower(-0.8)
-                intake.brake()
-            }),
-            WaitCommand(50),
-            InstantCommand({outtake.clawClose()}),
-            WaitCommand(400),
-            InstantCommand({intake.intakeOff()})
+        return ConditionalCommand(
+            SequentialCommandGroup(
+                PrepForTransfer(intake, outtake),
+                InstantCommand({
+                    intake.intakeCustomPower(-0.8)
+                    intake.brake()
+                }),
+                WaitCommand(50),
+                InstantCommand({outtake.clawClose()}),
+                WaitCommand(400),
+                InstantCommand({intake.intakeOff()})
+            ),
+            WaitCommand(1),
+            { intake.state == SubsystemStates.IntakeStates.TRANSFER }
         )
+
+
     }
 
     fun transferFailsafe() : Command {

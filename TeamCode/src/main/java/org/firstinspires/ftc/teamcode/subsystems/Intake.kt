@@ -82,11 +82,11 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     }
 
     fun openIntakeStopper() {
-        intakeStopper.position = INTAKE_STOP_OPEN;
+        intakeStopper.position = INTAKE_STOP_OPEN
     }
 
     fun closeIntakeStopper() {
-        intakeStopper.position = INTAKE_STOP_CLOSED;
+        intakeStopper.position = INTAKE_STOP_CLOSED
     }
 
     fun wristToPos(pos: Double) {
@@ -95,7 +95,7 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     }
 
     fun brake() {
-        runToPos(slide.currentPosition.toDouble(), 1.0)
+        runToPos(slide.currentPosition.toDouble(), 0.4)
     }
 
     fun checkColour(): Colours {

@@ -54,10 +54,11 @@ class Lift(val robot: Robot) : SubsystemBase() {
 
     fun atSetPoint() = pidf.atSetPoint()
 
-    fun brake() {
+    fun brake(power: Double) {
         left.targetPosition = left.currentPosition
         right.targetPosition = right.currentPosition
         setModes(DcMotor.RunMode.RUN_TO_POSITION)
-        setPowers(0.9)
+        setPowers(power)
+        //setVelocity(0.0)
     }
 }

@@ -31,7 +31,7 @@ public class Constants {
     public static double INTAKE_WRIST_TRANSFER = 0.24;
     public static double INTAKE_STOP_OPEN = 0.53;
     public static double INTAKE_STOP_CLOSED = 0.02;
-    public static double INTAKE_STALL_CURRENT_MA = 5900;
+    public static double INTAKE_STALL_CURRENT_MA = 5500;
     public static double INTAKE_SLIDE_STALL_CURRENT_MA = 6000;
     public static double INTAKE_EJECT_PWR = 0.8;
     public static double INTAKE_PWR = -1.0;
@@ -53,6 +53,9 @@ public class Constants {
     public static double ARM_TRANSFER = 0.82;
     public static double ARM_LOW_BAR = 0.7;
     public static double ARM_DEPOSIT = 0;
+    public static double ARM_LINK_OUT = 0.1;
+    public static double ARM_LINK_TRANSFER = 0.6;
+    public static double ARM_LINK_IN = 1;
 
     // -------- COLOUR SENSOR --------
     public static int[] CS_RED_RGB = {630, 335, 153};

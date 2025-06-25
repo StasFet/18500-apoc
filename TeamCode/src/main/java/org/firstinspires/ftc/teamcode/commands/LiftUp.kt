@@ -10,6 +10,7 @@ class LiftUp(val lift: Lift) : CommandBase() {
     }
 
     override fun initialize() {
+        lift.pidf.p = 4.0
         lift.setModes(DcMotor.RunMode.RUN_USING_ENCODER)
         lift.extensionSetPoint()
     }
@@ -23,6 +24,6 @@ class LiftUp(val lift: Lift) : CommandBase() {
     }
 
     override fun end(interrupted: Boolean) {
-        lift.brake()
+        lift.brake(0.5)
     }
 }
