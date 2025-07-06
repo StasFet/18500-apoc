@@ -12,6 +12,8 @@ class Lift(val robot: Robot) : SubsystemBase() {
     val right = robot.vslider
     val left = robot.vslidel
 
+    val vSlideTouch = robot.vSlideTouch
+
     val p = 4.0
     val i = 0.0
     val d = 0.02

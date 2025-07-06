@@ -3,11 +3,14 @@ package org.firstinspires.ftc.teamcode.subsystems
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.gamepad.GamepadEx
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.core.Constants.FRONT_DT_MULTI
 import org.firstinspires.ftc.teamcode.core.Constants.REAR_DT_MULTI
 import org.firstinspires.ftc.teamcode.core.Robot
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.sign
 
 class MecanumDrive(val robot: Robot) : SubsystemBase() {
 
@@ -15,7 +18,7 @@ class MecanumDrive(val robot: Robot) : SubsystemBase() {
     private val fr = robot.fr
     private val bl = robot.bl
     private val br = robot.br
-    private val gp: GamepadEx = robot.gpDrive
+    private val gp: GamepadEx = robot.gpGeneral
     private val odo = robot.odo
 
     init {
@@ -35,10 +38,17 @@ class MecanumDrive(val robot: Robot) : SubsystemBase() {
         bl.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
+
     public fun rcDrive() {
         val y = gp.leftY
         val x = gp.leftX * 1.1 // Counteract imperfect strafing
-        val rx = gp.rightX
+        var rx = gp.rightX
+
+        if (abs(rx) < 0.05){
+            rx = 0.0
+        } else {
+            rx = sign(gp.rightX) * abs(gp.rightX).pow(3.0) * 0.6;
+        }
 
         val denominator = max(abs(y) + abs(x) + abs(rx), 1.0)
         val frontLeftPower = (y + x + rx) / denominator

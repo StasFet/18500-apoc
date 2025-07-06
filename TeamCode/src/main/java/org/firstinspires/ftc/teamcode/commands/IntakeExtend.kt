@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
+import org.firstinspires.ftc.teamcode.opmodes.ApocTele
 import org.firstinspires.ftc.teamcode.subsystems.Intake
 
 class IntakeExtend(val intake: Intake) : CommandBase() {
@@ -17,7 +18,8 @@ class IntakeExtend(val intake: Intake) : CommandBase() {
         intake.slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
         intake.state = SubsystemStates.IntakeStates.EXTENDING
         intake.extensionSetPoint()
-        intake.wristToPos(0.4)
+        intake.wristToPos(INTAKE_HOVER)
+        intake.state = SubsystemStates.IntakeStates.EXTENDED
         //intake.intakeOff()
     }
 
@@ -28,7 +30,7 @@ class IntakeExtend(val intake: Intake) : CommandBase() {
     override fun isFinished(): Boolean {
         if (intake.slidesAtSetPoint()) {
             intake.state = SubsystemStates.IntakeStates.EXTENDED
-            intake.wristToPos(INTAKE_WRIST_DOWN)
+            //intake.wristToPos(INTAKE_WRIST_DOWN)
             return true
         }
         return false

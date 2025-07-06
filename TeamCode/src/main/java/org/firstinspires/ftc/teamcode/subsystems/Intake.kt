@@ -5,6 +5,12 @@ import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.PIDFController
 import com.arcrobotics.ftclib.hardware.ServoEx
 import com.acmerobotics.dashboard.FtcDashboard
+import com.arcrobotics.ftclib.command.Command
+import com.arcrobotics.ftclib.command.ConditionalCommand
+import com.arcrobotics.ftclib.command.InstantCommand
+import com.arcrobotics.ftclib.command.ParallelCommandGroup
+import com.arcrobotics.ftclib.command.SequentialCommandGroup
+import com.arcrobotics.ftclib.command.WaitCommand
 import com.arcrobotics.ftclib.controller.PIDController
 import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -12,6 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
+import org.firstinspires.ftc.teamcode.commands.LiftDown
 import org.firstinspires.ftc.teamcode.core.*
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import kotlin.math.abs
@@ -19,9 +26,9 @@ import kotlin.math.abs
 @Config
 public class Intake(val robot: Robot) : SubsystemBase() {
 
-    var p = PIDTune.P
-    var i = PIDTune.I
-    var d = PIDTune.D
+    var p = PIDTune.P //P is the amount you want to overshoot so the system reacts accordingly and in good amount of time
+    var i = PIDTune.I //look at how much error is accumulating overtime and responding based on that, basically small errors in steady state that the P wont fix, amplifys small errors that are being built up over time
+    var d = PIDTune.D //predicting future values? look at how its changing over time //be careful
 
     val intake: DcMotorEx = robot.intakeSpin
     val slide: DcMotorEx = robot.intakeSlide
@@ -34,6 +41,9 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     var isEjecting = false
     var cachedPower = 0.0
     var latestColour = "NONE"
+    val hSlideTouch = robot.hSlideTouch
+
+
 
     val dashboard: FtcDashboard = FtcDashboard.getInstance()
 
@@ -62,7 +72,7 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     fun extensionSetPoint() { customSetPoint(INTAKE_OUT_POS) }
     fun customSetPoint(setPoint: Double) {
         //slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        controller.setPoint = setPoint
+         controller.setPoint = setPoint
     }
 
     fun runToPos(pos: Double, power: Double) {

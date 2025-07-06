@@ -21,12 +21,19 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     fun retractIntake(intake: Intake): CommandBase {
         // if extended, do stuff
         return ConditionalCommand(
-            SequentialCommandGroup(
-            IntakeWaitForSample(intake),
-            IntakeRetract(intake)),
-            // otherwise do nothing!!
-            WaitCommand(1),
-            {intake.state == SubsystemStates.IntakeStates.EXTENDED})
+                SequentialCommandGroup(
+                    InstantCommand({intake.state = SubsystemStates.IntakeStates.EXTENDED}),
+                    IntakeWaitForSample(intake),
+                    InstantCommand({intake.intakeEject()}),
+                    WaitCommand(75 ),
+                    InstantCommand({intake.intakeOff()}),
+                    IntakeRetract(intake, outtake)
+                ),
+                //intake.state = SubsystemStates.IntakeStates.EXTENDED,
+                // otherwise do nothing!!
+                InstantCommand(),
+            { intake.state == SubsystemStates.IntakeStates.EXTENDING || intake.state == SubsystemStates.IntakeStates.EXTENDED}
+        )
     }
 
     fun transfer(): Command {
@@ -37,9 +44,11 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                     intake.intakeCustomPower(-0.8)
                     intake.brake()
                 }),
-                WaitCommand(50),
-                InstantCommand({outtake.clawClose()}),
-                WaitCommand(400),
+                WaitCommand(150),
+                InstantCommand({outtake.claw.setPosition(0.25)}),
+                WaitCommand(150),
+                InstantCommand({outtake.setLinkagePos(ARM_LINK_IN)}),
+                WaitCommand(200),
                 InstantCommand({intake.intakeOff()})
             ),
             WaitCommand(1),
@@ -57,11 +66,23 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         )
     }
 
+    fun HslideReset() : Command {
+        return InstantCommand({intake.slide.power = 0.5})
+    }
+
     fun prepForBasket() : Command {
-        return ParallelCommandGroup(
-            InstantCommand({outtake.setPosition(0.23)}),
-            LiftUp(lift)
-        )
+        return ConditionalCommand(
+            ParallelCommandGroup(
+                SequentialCommandGroup(
+                    InstantCommand({outtake.setPosition(ARM_DEPOSIT_SAMPLE)}),
+                    WaitCommand(300),
+                    InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)})
+                ),
+                    LiftUp(lift),
+                    InstantCommand({outtake.clawClose()})
+                ),InstantCommand(),
+                { intake.state == SubsystemStates.IntakeStates.TRANSFER }
+            )
     }
 
     fun depositAndReturn() : Command {
@@ -69,10 +90,39 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
             InstantCommand({outtake.clawOpen()}),
             WaitCommand(150),
             ParallelCommandGroup(
+                InstantCommand({outtake.setLinkagePos(ARM_LINK_TRANSFER)}),
+                WaitCommand(50),
                 InstantCommand({outtake.setPosition(ARM_TRANSFER)}),
-                LiftDown(lift)
+                LiftDown(lift, outtake),
+                //outtake.state = SubsystemStates.OuttakeState.IDLE
+                //dont know why this doesnt work
+                //issue: robot cant transfer after B
         ))
 
 
     }
+    fun specDropOff() : Command {
+        return SequentialCommandGroup(
+            InstantCommand({outtake.setPosition(ARM_DEPOSIT_SAMPLE)}),
+            InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)}),
+        )
+
+    }
+
+    fun specPickUp() : Command {
+        return SequentialCommandGroup(
+            InstantCommand({outtake.setPosition(ARM_SPEC_WALL)}),
+            InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)})
+        )
+    }
+
+    fun specHighBar() : Command {
+        return SequentialCommandGroup (
+            InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
+            InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_BAR)}),
+            InstantCommand({ VSLIDES_SPECIMEN_DEPOSIT})
+        )
+    }
+
+
 }

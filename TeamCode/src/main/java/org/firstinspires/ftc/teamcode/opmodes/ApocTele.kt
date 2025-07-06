@@ -20,8 +20,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit
 import org.firstinspires.ftc.teamcode.commands.*;
 import org.firstinspires.ftc.teamcode.core.Commands
-import org.firstinspires.ftc.teamcode.core.Constants.ARM_TRANSFER
-import org.firstinspires.ftc.teamcode.core.Constants.CLAW_CLOSED
+import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.Robot
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.*
@@ -49,6 +48,9 @@ class ApocTele() : CommandOpMode() {
     lateinit var transferBtn: GamepadButton
     lateinit var liftUpBtn: GamepadButton
     lateinit var liftDownBtn: GamepadButton
+    lateinit var hSlideResetBtn: GamepadButton
+    lateinit var stopEverythingBtn: GamepadButton
+    lateinit var intakeStartPositionBtn: GamepadButton
 
     override fun initialize() {
         CommandScheduler.getInstance().reset()
@@ -65,17 +67,20 @@ class ApocTele() : CommandOpMode() {
 
         drive = Drive(dt, robot)
 
-        intakeExtendBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.A)
-        intakeRetractBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.B)
+        intakeExtendBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.Y) //was originally B
+        intakeRetractBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.B) //was originally AZ
         intakeEjectBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.X)
-        transferBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.Y)
-        liftUpBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.DPAD_UP)
-        liftDownBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.DPAD_DOWN)
+        transferBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.A)
+        liftUpBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.LEFT_BUMPER)
+        liftDownBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.RIGHT_BUMPER)
+        hSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.BACK)
+        stopEverythingBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.B) //2nd driver aka stas
+        intakeStartPositionBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.Y) //2nd driver aka stas
 
-        Constants.setConstants(FConstants::class.java, LConstants::class.java)
+        //Constants.setConstants(FConstants::class.java, LConstants::class.java)
         register(dt, intake, outtake)
         dt.defaultCommand = drive
-        //CommandScheduler.getInstance().schedule(false, ZeroIntakeSlides(intake))
+        CommandScheduler.getInstance().schedule(false, ZeroIntakeSlides(intake))
         robot.intakeSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         telemetry.msTransmissionInterval = 25
 
@@ -89,13 +94,37 @@ class ApocTele() : CommandOpMode() {
             WaitCommand(50),
             CMD.prepForBasket()
             ), false)
-        intakeEjectBtn.whenHeld(IntakeEject(intake))
+
+        intakeEjectBtn.whenHeld(SequentialCommandGroup(
+                InstantCommand({CommandScheduler.getInstance().cancelAll()}),
+                InstantCommand({IntakeEject(intake)})
+            ), false)
+
         //transferBtn.whenPressed(CMD.transfer(intake, outtake), true)
         liftUpBtn.whenPressed(LiftUp(lift))
-        liftDownBtn.whenPressed(CMD.depositAndReturn())
+        liftDownBtn.whenPressed(SequentialCommandGroup(
+            CMD.depositAndReturn(),
+        ), true)
+        hSlideResetBtn.whenPressed(CMD.HslideReset())
 
+        //stopEverythingBtn.whenPressed(InstantCommand({CommandScheduler.getInstance().cancelAll()}))
+
+        intakeStartPositionBtn.whenPressed(SequentialCommandGroup(
+            InstantCommand({intake.wristToPos(INTAKE_START_POSITION)}),
+            InstantCommand({intake.state = SubsystemStates.IntakeStates.IDLE}),
+        ))
+
+
+
+        //servos in outtake
         outtake.clawOpen()
         outtake.setPosition(0.6)
+        outtake.setLinkagePos(ARM_LINK_IN)
+
+        //servos in intake
+        intake.wristToPos(INTAKE_HOVER)
+        intake.closeIntakeStopper()
+
     }
 
     override fun run() {

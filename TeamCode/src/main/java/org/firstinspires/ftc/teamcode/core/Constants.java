@@ -18,23 +18,25 @@ public class Constants {
 
     // lift
     public static double LIFT_TOLERANCE = 15;
-    public static double LIFT_UP = -880;
-    public static double LIFT_DOWN = 15;
+    public static double LIFT_UP = -800; //has been tested
+    public static double LIFT_DOWN = 15; //has been tested
 
     // intake
-    public static double INTAKE_TOLERANCE = 10;
-    public static double INTAKE_IN_POS = 30;
-    public static double INTAKE_TRANSFER_POS = 95;
-    public static double INTAKE_OUT_POS = 640;
-    public static double INTAKE_EJECT_POS = 0.27;
-    public static double INTAKE_WRIST_DOWN = 0.22;
-    public static double INTAKE_WRIST_TRANSFER = 0.24;
-    public static double INTAKE_STOP_OPEN = 0.53;
-    public static double INTAKE_STOP_CLOSED = 0.02;
-    public static double INTAKE_STALL_CURRENT_MA = 5500;
+    public static double INTAKE_TOLERANCE = 30;
+    public static double INTAKE_IN_POS = 30; //has been tested
+    public static double INTAKE_TRANSFER_POS = -100; //has been tested
+    public static double INTAKE_OUT_POS = -600; //has been tested
+    public static double INTAKE_EJECT_POS = 0.3;
+    public static double INTAKE_WRIST_DOWN = 0.2;
+    public static double INTAKE_WRIST_TRANSFER = 0.28;
+    public static double INTAKE_STOP_OPEN = 0.55; //has been changed
+    public static double INTAKE_STOP_CLOSED = 1; //hsa been changed
+    public static double INTAKE_STALL_CURRENT_MA = 5000;
     public static double INTAKE_SLIDE_STALL_CURRENT_MA = 6000;
-    public static double INTAKE_EJECT_PWR = 0.8;
+    public static double INTAKE_EJECT_PWR = 1.0;
     public static double INTAKE_PWR = -1.0;
+    public static double INTAKE_START_POSITION = 0.58;
+    public static double INTAKE_HOVER = 0.35;
 
     // hang
     public static double HANG_REV_UP = 9;
@@ -43,19 +45,22 @@ public class Constants {
 
 
     // outtake
-    public static double CLAW_OPEN = 0.7;
-    public static double CLAW_CLOSED = 0.5;
-    public static double WRIST_SPEC_WALL = 0;
-    public static double WRIST_SPEC_BAR = 0;
-    public static double WRIST_TRANSFER = 0;
-    public static double ARM_IDLE = 0;
-    public static double ARM_SPEC = 0.08;
-    public static double ARM_TRANSFER = 0.82;
-    public static double ARM_LOW_BAR = 0.7;
-    public static double ARM_DEPOSIT = 0;
-    public static double ARM_LINK_OUT = 0.1;
-    public static double ARM_LINK_TRANSFER = 0.6;
-    public static double ARM_LINK_IN = 1;
+    public static double CLAW_OPEN = 0.4; //has been tested
+    public static double CLAW_CLOSED = 0.2; //has been tested
+    public static double ARM_SPEC_WALL = 0.07;
+    public static double LINKAGE_SPEC_WALL = 0.07;
+    public static double ARM_SPEC_BAR = 0.82;
+    public static double ARM_SPEC = 0.82;
+    public static double ARM_TRANSFER = 0.88;
+    //public static double ARM_LOW_BAR = 0.7;
+    public static double ARM_DEPOSIT_SAMPLE = 0.3;
+    public static double ARM_DEPOSIT_SPECIMEN = 0.82;
+    public static double ARM_LINK_OUT = 0.08;
+    public static double ARM_LINK_TRANSFER = 0.75;
+    public static double ARM_LINK_IN = 0.9;
+    public static double ARM_START = 0.2;
+    public static double VSLIDES_SPECIMEN_DEPOSIT = 500;
+    public static double LINKAGE_SPEC_BAR = 0.07;
 
     // -------- COLOUR SENSOR --------
     public static int[] CS_RED_RGB = {630, 335, 153};
@@ -94,4 +99,6 @@ public class Constants {
     public static String NAME_HANGLEFTENC = "hangLeftEncoder";
     public static String NAME_INTAKERIGHT = "intakeRight";
     public static String NAME_INTAKELEFT = "intakeLeft";
+    public static String NAME_HSLIDETOUCH = "hSlideTouch";
+    public static String NAME_VSLIDETOUCH = "vSlideTouch";
 }

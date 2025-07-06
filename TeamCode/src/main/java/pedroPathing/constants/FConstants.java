@@ -1,11 +1,14 @@
 package pedroPathing.constants;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.util.CustomFilteredPIDFCoefficients;
-import com.pedropathing.util.CustomPIDFCoefficients;
+import com.pedropathing.localization.Localizers;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+//import com.pedropathing.localization.Localizers;
+//import com.pedropathing.follower.FollowerConstants;
+//import com.pedropathing.util.CustomFilteredPIDFCoefficients;
+//import com.pedropathing.util.CustomPIDFCoefficients;
+//import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import static org.firstinspires.ftc.teamcode.core.Constants.*;
 
@@ -24,10 +27,10 @@ public class FConstants {
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
-        FollowerConstants.leftFrontMotorMulti = 1.0;
-        FollowerConstants.leftRearMotorMulti = 1.0;
-        FollowerConstants.rightFrontMotorMulti = 1.0;
-        FollowerConstants.rightRearMotorMulti = 1.0;
+//        FollowerConstants.leftFrontMotorMulti = 1.0;
+//        FollowerConstants.leftRearMotorMulti = 1.0;
+//        FollowerConstants.rightFrontMotorMulti = 1.0;
+//        FollowerConstants.rightRearMotorMulti = 1.0;
 
         FollowerConstants.mass = 10;
 

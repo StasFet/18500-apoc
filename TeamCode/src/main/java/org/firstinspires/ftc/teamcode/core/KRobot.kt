@@ -49,6 +49,8 @@ class Robot(val hMap: HardwareMap, val telemetry: Telemetry, val g1: Gamepad, va
 
     // sensors
     val intakeColorSensor: RevColorSensorV3 by lazy { hMap[NAME_COLOURSENSOR] as RevColorSensorV3 }
+    val hSlideTouch: TouchSensor by lazy {hMap[NAME_HSLIDETOUCH] as TouchSensor}
+    val vSlideTouch: TouchSensor by lazy {hMap[NAME_VSLIDETOUCH] as TouchSensor}
     val hangRightEncoder: AnalogInput by lazy { hMap[NAME_HANGRIGHTENC] as AnalogInput }
     val hangLeftEncoder: AnalogInput by lazy { hMap[NAME_HANGRIGHTENC] as AnalogInput }
 
