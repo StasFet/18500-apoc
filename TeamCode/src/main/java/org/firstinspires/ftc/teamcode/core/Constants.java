@@ -37,6 +37,7 @@ public class Constants {
     public static double INTAKE_PWR = -1.0;
     public static double INTAKE_START_POSITION = 0.58;
     public static double INTAKE_HOVER = 0.35;
+    public static int CYCLES_PER_SLIDE_RESET = 5;
 
     // hang
     public static double HANG_REV_UP = 9;

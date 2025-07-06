@@ -35,15 +35,14 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     val leftServo: Servo = robot.intakeLeft
     val rightServo: Servo = robot.intakeRight
     val colourSensor: RevColorSensorV3 = robot.intakeColorSensor
-    val intakeStopper: Servo = robot.intakeStopper;
+    val intakeStopper: Servo = robot.intakeStopper
+    val touch = robot.hSlideTouch
     val timer: ElapsedTime = ElapsedTime()
     val cols = robot.cols
     var isEjecting = false
     var cachedPower = 0.0
     var latestColour = "NONE"
-    val hSlideTouch = robot.hSlideTouch
-
-
+    var cycleCount = 0
 
     val dashboard: FtcDashboard = FtcDashboard.getInstance()
 

@@ -11,8 +11,7 @@ import org.firstinspires.ftc.teamcode.core.Robot
 class Lift(val robot: Robot) : SubsystemBase() {
     val right = robot.vslider
     val left = robot.vslidel
-
-    val vSlideTouch = robot.vSlideTouch
+    val touch = robot.vSlideTouch
 
     val p = 4.0
     val i = 0.0

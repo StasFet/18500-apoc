@@ -55,7 +55,7 @@ class ApocTele() : CommandOpMode() {
     override fun initialize() {
         CommandScheduler.getInstance().reset()
         robot = Robot(hardwareMap, telemetry, gamepad1, gamepad2)
-        robot.setColours(Intake.Colours.BLUE, Intake.Colours.YELLOW)//Intake.Colours.RED, Intake.Colours.BLUE) //choose colours
+        robot.setColours(Intake.Colours.BLUE, Intake.Colours.YELLOW)    //Intake.Colours.RED, Intake.Colours.BLUE) //choose colours
         odo = robot.odo
         follower = robot.follower
         dt = MecanumDrive(robot)
@@ -80,9 +80,10 @@ class ApocTele() : CommandOpMode() {
         //Constants.setConstants(FConstants::class.java, LConstants::class.java)
         register(dt, intake, outtake)
         dt.defaultCommand = drive
-        CommandScheduler.getInstance().schedule(false, ZeroIntakeSlides(intake))
         robot.intakeSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         telemetry.msTransmissionInterval = 25
+
+        CommandScheduler.getInstance().schedule(ZeroVerticalSlides(lift))
 
         intakeExtendBtn.whenPressed(IntakeExtend(intake), true)
         intakeRetractBtn.whenPressed(SequentialCommandGroup(
@@ -105,7 +106,7 @@ class ApocTele() : CommandOpMode() {
         liftDownBtn.whenPressed(SequentialCommandGroup(
             CMD.depositAndReturn(),
         ), true)
-        hSlideResetBtn.whenPressed(CMD.HslideReset())
+        hSlideResetBtn.whenPressed(ZeroIntakeSlides(intake))
 
         //stopEverythingBtn.whenPressed(InstantCommand({CommandScheduler.getInstance().cancelAll()}))
 

@@ -16,7 +16,7 @@ class ZeroIntakeSlides(val intake: Intake) : CommandBase() {
     }
 
     override fun isFinished(): Boolean {
-        return intake.slide.getCurrent(CurrentUnit.MILLIAMPS) >= 6000
+        return intake.touch.isPressed
     }
 
     override fun end(interrupted: Boolean) {

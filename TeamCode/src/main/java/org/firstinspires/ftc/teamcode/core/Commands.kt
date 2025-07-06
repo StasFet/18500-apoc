@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.commands.IntakeWaitForSample
 import org.firstinspires.ftc.teamcode.commands.LiftDown
 import org.firstinspires.ftc.teamcode.commands.LiftUp
 import org.firstinspires.ftc.teamcode.commands.PrepForTransfer
+import org.firstinspires.ftc.teamcode.commands.ZeroIntakeSlides
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.subsystems.*
 
@@ -26,7 +27,10 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                     IntakeWaitForSample(intake),
                     InstantCommand({intake.intakeEject()}),
                     WaitCommand(75 ),
-                    InstantCommand({intake.intakeOff()}),
+                    InstantCommand({
+                        intake.intakeOff()
+                        intake.cycleCount++
+                    }),
                     IntakeRetract(intake, outtake)
                 ),
                 //intake.state = SubsystemStates.IntakeStates.EXTENDED,
@@ -66,10 +70,6 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         )
     }
 
-    fun HslideReset() : Command {
-        return InstantCommand({intake.slide.power = 0.5})
-    }
-
     fun prepForBasket() : Command {
         return ConditionalCommand(
             ParallelCommandGroup(
@@ -78,8 +78,9 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                     WaitCommand(300),
                     InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)})
                 ),
-                    LiftUp(lift),
-                    InstantCommand({outtake.clawClose()})
+                LiftUp(lift),
+                zeroIntakeSlidesAutomatically(),
+                InstantCommand({outtake.clawClose()})
                 ),InstantCommand(),
                 { intake.state == SubsystemStates.IntakeStates.TRANSFER }
             )
@@ -124,5 +125,11 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         )
     }
 
-
+    fun zeroIntakeSlidesAutomatically() : Command {
+        return ConditionalCommand(
+            ZeroIntakeSlides(intake),
+            WaitCommand(1),
+            {intake.cycleCount >= CYCLES_PER_SLIDE_RESET}
+        )
+    }
 }
