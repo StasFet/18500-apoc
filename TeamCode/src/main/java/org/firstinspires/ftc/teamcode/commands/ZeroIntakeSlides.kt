@@ -12,7 +12,7 @@ class ZeroIntakeSlides(val intake: Intake) : CommandBase() {
 
     override fun initialize() {
         intake.slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        intake.slide.power = -0.5
+        intake.slide.power = 0.8
     }
 
     override fun isFinished(): Boolean {
@@ -20,6 +20,7 @@ class ZeroIntakeSlides(val intake: Intake) : CommandBase() {
     }
 
     override fun end(interrupted: Boolean) {
+        intake.slide.power = 0.0
         intake.slide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         intake.slide.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }

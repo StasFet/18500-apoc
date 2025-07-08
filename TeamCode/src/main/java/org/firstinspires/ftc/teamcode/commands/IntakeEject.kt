@@ -14,7 +14,6 @@ class IntakeEject(val intake: Intake): CommandBase() {
     }
 
     override fun isFinished() : Boolean {
-        intake.updateVelocity()
         return intake.state != SubsystemStates.IntakeStates.ACTIVATED
     }
 

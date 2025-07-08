@@ -18,16 +18,14 @@ class LiftDown(val lift: Lift, val outtake: Outtake) : CommandBase() {
         lift.contractionSetPoint()
     }
 
-    override fun execute() {
-        lift.updateVelocity()
-    }
+//    override fun isFinished(): Boolean {
+//        return lift.atSetPoint()
+//    }
 
-    override fun isFinished(): Boolean {
-        return lift.atSetPoint()
-    }
+    override fun isFinished() = lift.atSetPoint()
 
     override fun end(interrupted: Boolean) {
-        lift.brake(0.0)
+        lift.setPowers(0.0)
         outtake.state = SubsystemStates.OuttakeState.IDLE
     }
 }

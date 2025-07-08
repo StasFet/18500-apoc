@@ -45,7 +45,7 @@ public class Intake(val robot: Robot) : SubsystemBase() {
     var cycleCount = 0
 
     val dashboard: FtcDashboard = FtcDashboard.getInstance()
-
+    var ejectWaiting = false
     var state = SubsystemStates.IntakeStates.IDLE
     var intakeBusy = false
 
@@ -82,7 +82,9 @@ public class Intake(val robot: Robot) : SubsystemBase() {
 
     fun intakeOn() { intakeCustomPower(INTAKE_PWR) }
     fun intakeOff() { intakeCustomPower(0.0) }
-    fun intakeEject() { intakeCustomPower(INTAKE_EJECT_PWR) }
+    fun intakeEject() {
+        intakeCustomPower(INTAKE_EJECT_PWR)
+    }
     fun intakeCustomPower(power: Double) {
         if (cachedPower != power) {
             intake.power = power

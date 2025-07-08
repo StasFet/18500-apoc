@@ -17,7 +17,7 @@ public class Constants {
     // -------- MOVEMENT --------
 
     // lift
-    public static double LIFT_TOLERANCE = 15;
+    public static double LIFT_TOLERANCE = 25;
     public static double LIFT_UP = -800; //has been tested
     public static double LIFT_DOWN = 15; //has been tested
 
@@ -31,13 +31,14 @@ public class Constants {
     public static double INTAKE_WRIST_TRANSFER = 0.28;
     public static double INTAKE_STOP_OPEN = 0.55; //has been changed
     public static double INTAKE_STOP_CLOSED = 1; //hsa been changed
-    public static double INTAKE_STALL_CURRENT_MA = 5000;
+    public static double INTAKE_STALL_CURRENT_MA = 5800;
     public static double INTAKE_SLIDE_STALL_CURRENT_MA = 6000;
     public static double INTAKE_EJECT_PWR = 1.0;
     public static double INTAKE_PWR = -1.0;
     public static double INTAKE_START_POSITION = 0.58;
     public static double INTAKE_HOVER = 0.35;
     public static int CYCLES_PER_SLIDE_RESET = 5;
+    public static int INTAKE_EJECT_TIMEOUT = 300;
 
     // hang
     public static double HANG_REV_UP = 9;
@@ -52,12 +53,12 @@ public class Constants {
     public static double LINKAGE_SPEC_WALL = 0.07;
     public static double ARM_SPEC_BAR = 0.82;
     public static double ARM_SPEC = 0.82;
-    public static double ARM_TRANSFER = 0.88;
+    public static double ARM_TRANSFER = 0.89;
     //public static double ARM_LOW_BAR = 0.7;
     public static double ARM_DEPOSIT_SAMPLE = 0.3;
     public static double ARM_DEPOSIT_SPECIMEN = 0.82;
     public static double ARM_LINK_OUT = 0.08;
-    public static double ARM_LINK_TRANSFER = 0.75;
+    public static double ARM_LINK_TRANSFER = 0.8;
     public static double ARM_LINK_IN = 0.9;
     public static double ARM_START = 0.2;
     public static double VSLIDES_SPECIMEN_DEPOSIT = 500;
@@ -71,7 +72,7 @@ public class Constants {
     public static int[] CS_YELLOW_TOLERANCE = {260, 325, 60};
 
     public static int[] CS_BLUE_RGB = {125, 252, 605};
-    public static int[] CS_BLUE_TOLERANCE = {35, 60, 135};
+    public static int[] CS_BLUE_TOLERANCE = {45, 70, 165};
 
 // -----------------------------------------------------------------------------
     // -------- HARDWARE NAMES --------
@@ -102,4 +103,5 @@ public class Constants {
     public static String NAME_INTAKELEFT = "intakeLeft";
     public static String NAME_HSLIDETOUCH = "hSlideTouch";
     public static String NAME_VSLIDETOUCH = "vSlideTouch";
+
 }

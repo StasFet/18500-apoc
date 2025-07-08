@@ -5,6 +5,8 @@ import com.arcrobotics.ftclib.command.CommandBase
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.InstantCommand
 import com.arcrobotics.ftclib.command.ParallelCommandGroup
+import com.arcrobotics.ftclib.command.ParallelDeadlineGroup
+import com.arcrobotics.ftclib.command.ParallelRaceGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
 import com.qualcomm.hardware.ams.AMSColorSensor.Wait
@@ -24,9 +26,12 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         return ConditionalCommand(
                 SequentialCommandGroup(
                     InstantCommand({intake.state = SubsystemStates.IntakeStates.EXTENDED}),
-                    IntakeWaitForSample(intake),
-                    InstantCommand({intake.intakeEject()}),
-                    WaitCommand(75 ),
+                    ParallelDeadlineGroup(
+                        IntakeWaitForSample(intake),
+                        LiftDown(lift, outtake),
+                    ),
+                    InstantCommand({intake.intakeCustomPower(1.0)}),
+                    WaitCommand(20),
                     InstantCommand({
                         intake.intakeOff()
                         intake.cycleCount++
@@ -48,11 +53,10 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                     intake.intakeCustomPower(-0.8)
                     intake.brake()
                 }),
-                WaitCommand(150),
+                WaitCommand(50),
                 InstantCommand({outtake.claw.setPosition(0.25)}),
                 WaitCommand(150),
                 InstantCommand({outtake.setLinkagePos(ARM_LINK_IN)}),
-                WaitCommand(200),
                 InstantCommand({intake.intakeOff()})
             ),
             WaitCommand(1),
@@ -74,13 +78,12 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         return ConditionalCommand(
             ParallelCommandGroup(
                 SequentialCommandGroup(
+                    WaitCommand(100),
                     InstantCommand({outtake.setPosition(ARM_DEPOSIT_SAMPLE)}),
                     WaitCommand(300),
                     InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)})
                 ),
-                LiftUp(lift),
-                zeroIntakeSlidesAutomatically(),
-                InstantCommand({outtake.clawClose()})
+                LiftUp(lift)
                 ),InstantCommand(),
                 { intake.state == SubsystemStates.IntakeStates.TRANSFER }
             )
@@ -127,7 +130,10 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
 
     fun zeroIntakeSlidesAutomatically() : Command {
         return ConditionalCommand(
-            ZeroIntakeSlides(intake),
+            SequentialCommandGroup(
+                ZeroIntakeSlides(intake),
+                InstantCommand({intake.cycleCount = 0})
+            ),
             WaitCommand(1),
             {intake.cycleCount >= CYCLES_PER_SLIDE_RESET}
         )

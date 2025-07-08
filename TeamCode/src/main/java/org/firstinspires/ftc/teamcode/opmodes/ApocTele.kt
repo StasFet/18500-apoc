@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.CommandOpMode
 import com.arcrobotics.ftclib.command.CommandScheduler
 import com.arcrobotics.ftclib.command.ConditionalCommand
 import com.arcrobotics.ftclib.command.InstantCommand
+import com.arcrobotics.ftclib.command.ParallelCommandGroup
 import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
 import com.arcrobotics.ftclib.command.button.GamepadButton
@@ -39,6 +40,7 @@ class ApocTele() : CommandOpMode() {
     lateinit var dt: MecanumDrive
     lateinit var intake: Intake
     lateinit var drive: Drive
+    lateinit var fcDrive: FcDrive
     lateinit var outtake: Outtake
     lateinit var lift: Lift
 
@@ -49,10 +51,12 @@ class ApocTele() : CommandOpMode() {
     lateinit var liftUpBtn: GamepadButton
     lateinit var liftDownBtn: GamepadButton
     lateinit var hSlideResetBtn: GamepadButton
+    lateinit var vSlideResetBtn: GamepadButton
     lateinit var stopEverythingBtn: GamepadButton
     lateinit var intakeStartPositionBtn: GamepadButton
 
     override fun initialize() {
+
         CommandScheduler.getInstance().reset()
         robot = Robot(hardwareMap, telemetry, gamepad1, gamepad2)
         robot.setColours(Intake.Colours.BLUE, Intake.Colours.YELLOW)    //Intake.Colours.RED, Intake.Colours.BLUE) //choose colours
@@ -66,6 +70,7 @@ class ApocTele() : CommandOpMode() {
         CMD = Commands(intake, outtake, lift)
 
         drive = Drive(dt, robot)
+        fcDrive = FcDrive(dt)
 
         intakeExtendBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.Y) //was originally B
         intakeRetractBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.B) //was originally AZ
@@ -73,8 +78,11 @@ class ApocTele() : CommandOpMode() {
         transferBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.A)
         liftUpBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.LEFT_BUMPER)
         liftDownBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.RIGHT_BUMPER)
-        hSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.BACK)
-        stopEverythingBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.B) //2nd driver aka stas
+
+
+        hSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.DPAD_LEFT)
+        vSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.DPAD_UP)
+        stopEverythingBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.X) //2nd driver aka stas
         intakeStartPositionBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.Y) //2nd driver aka stas
 
         //Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -83,7 +91,23 @@ class ApocTele() : CommandOpMode() {
         robot.intakeSlide.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
         telemetry.msTransmissionInterval = 25
 
-        CommandScheduler.getInstance().schedule(ZeroVerticalSlides(lift))
+        CommandScheduler.getInstance().schedule(SequentialCommandGroup(
+            InstantCommand({
+                outtake.clawOpen()
+                outtake.setPosition(0.6)
+                outtake.setLinkagePos(ARM_LINK_IN)
+
+                //servos in intake
+                intake.wristToPos(INTAKE_HOVER)
+                intake.closeIntakeStopper()
+            }),
+            WaitCommand(500),
+            ParallelCommandGroup(
+                ZeroVerticalSlides(lift), ZeroIntakeSlides(intake)
+            )
+        ))
+
+        CommandScheduler.getInstance().schedule(AlwaysUpdateLiftPID(lift))
 
         intakeExtendBtn.whenPressed(IntakeExtend(intake), true)
         intakeRetractBtn.whenPressed(SequentialCommandGroup(
@@ -91,15 +115,17 @@ class ApocTele() : CommandOpMode() {
             CMD.retractIntake(intake),
             WaitCommand(50),
             CMD.transfer(),
-            CMD.transferFailsafe(),
+            //CMD.transferFailsafe(),
             WaitCommand(50),
-            CMD.prepForBasket()
-            ), false)
+            CMD.prepForBasket(),
+            ParallelCommandGroup(
+                CMD.zeroIntakeSlidesAutomatically(),
+                InstantCommand({outtake.clawClose()})
+            )), true)
 
-        intakeEjectBtn.whenHeld(SequentialCommandGroup(
-                InstantCommand({CommandScheduler.getInstance().cancelAll()}),
-                InstantCommand({IntakeEject(intake)})
-            ), false)
+        intakeEjectBtn.whenHeld(
+            IntakeEject(intake)
+        )
 
         //transferBtn.whenPressed(CMD.transfer(intake, outtake), true)
         liftUpBtn.whenPressed(LiftUp(lift))
@@ -108,23 +134,10 @@ class ApocTele() : CommandOpMode() {
         ), true)
         hSlideResetBtn.whenPressed(ZeroIntakeSlides(intake))
 
-        //stopEverythingBtn.whenPressed(InstantCommand({CommandScheduler.getInstance().cancelAll()}))
-
         intakeStartPositionBtn.whenPressed(SequentialCommandGroup(
             InstantCommand({intake.wristToPos(INTAKE_START_POSITION)}),
             InstantCommand({intake.state = SubsystemStates.IntakeStates.IDLE}),
         ))
-
-
-
-        //servos in outtake
-        outtake.clawOpen()
-        outtake.setPosition(0.6)
-        outtake.setLinkagePos(ARM_LINK_IN)
-
-        //servos in intake
-        intake.wristToPos(INTAKE_HOVER)
-        intake.closeIntakeStopper()
 
     }
 
@@ -141,11 +154,14 @@ class ApocTele() : CommandOpMode() {
         packet.put("Target", intake.controller.setPoint)
         packet.put("Position", intake.slide.currentPosition)
         packet.put("Vert pos", lift.right.currentPosition)
-        packet.put("Vert target", lift.pidf.setPoint)
+        packet.put("Vert setpoint", lift.pidf.setPoint)
+        packet.put("Vert L target", lift.left.targetPosition)
+        packet.put("Vert R target", lift.right.targetPosition)
         packet.put("Intake Current", intake.intake.getCurrent(CurrentUnit.MILLIAMPS))
         packet.put("Intake Slide Current", intake.slide.getCurrent(CurrentUnit.MILLIAMPS))
         packet.put("Left lift current", lift.left.getCurrent(CurrentUnit.MILLIAMPS))
         packet.put("Right lift current", lift.right.getCurrent(CurrentUnit.MILLIAMPS))
+        packet.put("Claw position", outtake.claw.position)
         dashboard.sendTelemetryPacket(packet)
 
         //telemetry.addData("")
@@ -153,6 +169,8 @@ class ApocTele() : CommandOpMode() {
         //telemetry.addData("Colour detected", intake.latestColour)
         telemetry.addData("Intake position", intake.slide.currentPosition)
         telemetry.addData("Intake slide power", intake.slide.power)
+        telemetry.addData("Left vslide power", lift.left.power)
+        telemetry.addData("Right vslide power", lift.right.power)
         telemetry.addData("Intake power", intake.intake.power)
         telemetry.update()
     }

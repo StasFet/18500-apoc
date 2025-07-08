@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.hardware.rev.RevColorSensorV3
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -16,7 +18,9 @@ import kotlin.math.abs
 @TeleOp(name = "Colour Sensor Tune")
 class ColourSensorTune : LinearOpMode() {
     lateinit var colourSensor: RevColorSensorV3
+    var latestColour = ""
     override fun runOpMode() {
+        telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         colourSensor = hardwareMap.get(RevColorSensorV3::class.java, NAME_COLOURSENSOR)
         colourSensor.initialize()
         waitForStart()
@@ -25,42 +29,50 @@ class ColourSensorTune : LinearOpMode() {
             telemetry.addData("red", colourSensor.red())
             telemetry.addData("blue", colourSensor.blue())
             telemetry.addData("green", colourSensor.green())
-            var out = ""
-            if (checkColour(Colours.RED)) out = "RED"
-            else if (checkColour(Colours.BLUE)) out = "BLUE"
-            else if (checkColour(Colours.YELLOW)) out = "YELLOW"
-            else out = "NONE"
+            checkColour()
+            var out = latestColour
             telemetry.addData("Colour Detected", out)
             telemetry.update()
         }
     }
 
-    fun checkColour(colour: Colours): Boolean {
-        var green = colourSensor.green()
+    fun checkColour(): Colours {
         var red = colourSensor.red()
+        var green = colourSensor.green()
         var blue = colourSensor.blue()
 
-//        when (colour) {
-//            Colours.RED -> {
-//                val redInTol = abs(red - CS_RED_RGB[0]) <= CS_RED_TOLERANCE[0]
-//                val greenInTol = abs(green - CS_RED_RGB[1]) <= CS_RED_TOLERANCE[1]
-//                val blueInTol = abs(blue - CS_RED_RGB[2]) <= CS_RED_TOLERANCE[2]
-//                return redInTol && greenInTol && blueInTol
-//            }
-//
-//            Colours.BLUE -> {
-//                val redInTol = abs(red - CS_BLUE_RGB[0]) <= CS_BLUE_TOLERANCE[0]
-//                val greenInTol = abs(green - CS_BLUE_RGB[1]) <= CS_BLUE_TOLERANCE[1]
-//                val blueInTol = abs(blue - CS_BLUE_RGB[2]) <= CS_BLUE_TOLERANCE[2]
-//                return redInTol && greenInTol && blueInTol
-//            }
-//
-//            Colours.YELLOW -> {
-//                val redInTol = abs(red - CS_YELLOW_RGB[0]) <= CS_YELLOW_TOLERANCE[0]
-//                val greenInTol = abs(green - CS_YELLOW_RGB[1]) <= CS_YELLOW_TOLERANCE[1]
-//                val blueInTol = abs(blue - CS_YELLOW_RGB[2]) <= CS_YELLOW_TOLERANCE[2]
-//                return redInTol && greenInTol && blueInTol
-//            }
-        return false
+        var redInTol = abs(red - CS_RED_RGB[0]) <= CS_RED_TOLERANCE[0]
+        var greenInTol = abs(green - CS_RED_RGB[1]) <= CS_RED_TOLERANCE[1]
+        var blueInTol = abs(blue - CS_RED_RGB[2]) <= CS_RED_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "RED"
+            return Colours.RED
+        }
+
+        redInTol = abs(red - CS_BLUE_RGB[0]) <= CS_BLUE_TOLERANCE[0]
+        greenInTol = abs(green - CS_BLUE_RGB[1]) <= CS_BLUE_TOLERANCE[1]
+        blueInTol = abs(blue - CS_BLUE_RGB[2]) <= CS_BLUE_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "BLUE"
+            return Colours.BLUE
+        }
+
+        redInTol = abs(red - CS_YELLOW_RGB[0]) <= CS_YELLOW_TOLERANCE[0]
+        greenInTol = abs(green - CS_YELLOW_RGB[1]) <= CS_YELLOW_TOLERANCE[1]
+        blueInTol = abs(blue - CS_YELLOW_RGB[2]) <= CS_YELLOW_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "YELLOW"
+            return Colours.YELLOW
+        }
+
+        latestColour = "NONE"
+        return Colours.NONE
+    }
+
+    enum class Colours {
+        RED,
+        BLUE,
+        YELLOW,
+        NONE
     }
 }

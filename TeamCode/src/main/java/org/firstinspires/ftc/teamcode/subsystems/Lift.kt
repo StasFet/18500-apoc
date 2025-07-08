@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems
 
+import android.hardware.SensorPrivacyManager.Sensors
 import com.acmerobotics.dashboard.config.Config
 import com.arcrobotics.ftclib.command.SubsystemBase
 import com.arcrobotics.ftclib.controller.PIDFController
@@ -7,13 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.Robot
 
+
 @Config
 class Lift(val robot: Robot) : SubsystemBase() {
     val right = robot.vslider
     val left = robot.vslidel
     val touch = robot.vSlideTouch
 
-    val p = 4.0
+    val p = 6.0
     val i = 0.0
     val d = 0.02
     val f = 0.0
@@ -26,6 +28,9 @@ class Lift(val robot: Robot) : SubsystemBase() {
 
         right.mode = DcMotor.RunMode.RUN_USING_ENCODER
         left.mode = DcMotor.RunMode.RUN_USING_ENCODER
+
+        right.targetPositionTolerance = LIFT_TOLERANCE.toInt()
+        left.targetPositionTolerance = LIFT_TOLERANCE.toInt()
 
         pidf.setTolerance(LIFT_TOLERANCE)
     }
@@ -50,7 +55,7 @@ class Lift(val robot: Robot) : SubsystemBase() {
 
     fun setPowers(power: Double) {
         left.power = power
-        right.power = power
+        right.power = -power
     }
 
     fun atSetPoint() = pidf.atSetPoint()
@@ -61,5 +66,19 @@ class Lift(val robot: Robot) : SubsystemBase() {
         setModes(DcMotor.RunMode.RUN_TO_POSITION)
         setPowers(power)
         //setVelocity(0.0)
+    }
+
+    fun brake(power: Double, offset: Int) {
+//        left.targetPosition = left.currentPosition + offset
+//        right.targetPosition = right.currentPosition + offset
+//        setModes(DcMotor.RunMode.RUN_TO_POSITION)
+//        setPowers(power)
+        customSetPoint(right.currentPosition.toDouble())
+    }
+
+    fun convertToInt(value: Any): Int {
+        if (value is Int) return value
+        else if (value is Double) return value.toInt()
+        else {throw ClassCastException()}
     }
 }
