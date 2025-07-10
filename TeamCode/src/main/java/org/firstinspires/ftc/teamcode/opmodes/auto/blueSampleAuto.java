@@ -83,6 +83,44 @@ public class blueSampleAuto extends CommandOpMode {
                     ).schedule();
                     setPathState(3);
                 }
+            case 3:
+                if(!follower.isBusy()){
+                    follower.followPath(angleForSm2);
+                    //INTAKE SAMPLE
+                    setPathState(4);
+                }
+            case 4:
+                if (!follower.isBusy()){
+                    follower.followPath((scoreSm2));
+                    setPathState(5);
+                }
+            case 5:
+                if(!follower.isBusy()) {
+                    follower.followPath(angleForSm3);
+                    setPathState(6);
+                }
+            case 6:
+                if(!follower.isBusy()){
+                    follower.followPath(scoreSm3);
+                    setPathState(7);
+                }
+            case 7:
+                if(!follower.isBusy()) {
+                    follower.followPath(basketToSub);
+                    setPathState(8);
+                }
+            case 8:
+                if(!follower.isBusy()){
+                    follower.followPath(searchForSample);
+                    //INTAKE
+                    setPathState(9);
+                }
+            case 9:
+                if(!follower.isBusy()){
+                    follower.followPath(subToBasket);
+                    //SCORE
+                    setPathState(10);
+                }
         }
     }
 }

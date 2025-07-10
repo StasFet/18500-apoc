@@ -21,6 +21,10 @@ public class Positions {
 	* 	- park??
 	*
 	* */
+	public static final Pose startPose = new Pose(8, 112, Math.toRadians(0));
+	public static final Pose scorePose = new Pose(16.500, 128.000, Math.toRadians(315));
+	public static final Pose subPose1 = new Pose(60.400, 95.000, Point.CARTESIAN);
+	public static final Pose subPose2 = new Pose(67.000, 95.000, Point.CARTESIAN);
 
 	// SPECIMEN AUTO ----------------
 	/*
