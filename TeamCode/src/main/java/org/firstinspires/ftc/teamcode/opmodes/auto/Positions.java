@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Point;
 
 // pose template
 // public static final Pose template = new Pose(0, 0, Math.toRadians(0));
@@ -33,5 +34,15 @@ public class Positions {
 	* 	- 3rd-5th spec bar
 	* 	- park??
 	*
+	* 	--POSES--
+	* 	wall
+	* 	bar
+	* 	slide
+	* 	wallApproach
+	*
 	* */
+	public static final Pose wall = new Pose(9.00,8.00, Point.CARTESIAN);
+	public static final Pose bar = new Pose(39.000,70.00,Point.CARTESIAN);
+	public static final Pose slide = new Pose(39.000,68.000,Point.CARTESIAN);
+	public static final Pose wallApproach = new Pose(39.000,68.000,Point.CARTESIAN);
 }

@@ -27,7 +27,7 @@ import pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 
-public class blueSampleAuto extends CommandOpMode {
+public class blueSpecAuto extends CommandOpMode {
     private int pathState = 0;
     private Follower follower;
     private Timer pathTimer, actionTimer, opModeTimer;
@@ -59,24 +59,20 @@ public class blueSampleAuto extends CommandOpMode {
         switch(pathState){
             case 0:
                 new SequentialCommandGroup(
-                    new InstantCommand(() -> follower.followPath(moveToScore)),
-                    CMD.prepForBasket(),
-                    CMD.depositAndReturn()
+
                 ).schedule();
                 setPathState(1);
             case 1:
                 if(!follower.isBusy()){
                     new SequentialCommandGroup(
-                        new InstantCommand(() -> follower.followPath(angleForSm1)),
-                        new IntakeWaitForSample(intake)
+
                     ).schedule();
                     setPathState(2);
                 }
             case 2:
                 if (!follower.isBusy()){
                     new SequentialCommandGroup(
-                        new InstantCommand(() -> follower.followPath(scoreSm1))
-                        //SCORE SAMPLE
+
                     ).schedule();
                     setPathState(3);
                 }
