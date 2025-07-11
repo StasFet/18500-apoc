@@ -41,8 +41,8 @@ public class Positions {
 	* 	wallApproach
 	*
 	* */
-	public static final Pose wall = new Pose(9.00,8.00, Point.CARTESIAN);
-	public static final Pose bar = new Pose(39.000,70.00,Point.CARTESIAN);
+	public static final Pose wall = new Pose(9.000,8.000, Point.CARTESIAN);
+	public static final Pose bar = new Pose(39.000,70.000,Point.CARTESIAN);
 	public static final Pose slide = new Pose(39.000,68.000,Point.CARTESIAN);
-	public static final Pose wallApproach = new Pose(39.000,68.000,Point.CARTESIAN);
+	public static final Pose wallApproach = new Pose(15.000, 8.000, Point.CARTESIAN);
 }

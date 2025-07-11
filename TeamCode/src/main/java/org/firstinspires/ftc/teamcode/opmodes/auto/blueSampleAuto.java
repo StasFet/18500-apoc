@@ -53,7 +53,10 @@ public class blueSampleAuto extends CommandOpMode {
     }
 
     @Override
-    public void run(){}
+    public void run(){
+        autonomousPathUpdates();
+        telemetry.addData("pathState", pathState);
+    }
 
     private void autonomousPathUpdates(){
         switch(pathState){

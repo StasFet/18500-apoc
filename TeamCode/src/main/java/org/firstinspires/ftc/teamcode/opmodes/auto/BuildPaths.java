@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import static org.firstinspires.ftc.teamcode.opmodes.auto.Positions.bar;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.Positions.slide;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.Positions.wall;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.Positions.wallApproach;
+
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathBuilder;
@@ -11,7 +16,14 @@ public class BuildPaths {
 
 
 		public static PathBuilder builder = new PathBuilder();
-
+		/*
+		   _____         __  __ _____  _      ______           _    _ _______ ____
+		  / ____|  /\   |  \/  |  __ \| |    |  ____|     /\  | |  | |__   __/ __ \
+		 | (___   /  \  | \  / | |__) | |    | |__       /  \ | |  | |  | | | |  | |
+		  \___ \ / /\ \ | |\/| |  ___/| |    |  __|     / /\ \| |  | |  | | | |  | |
+		  ____) / ____ \| |  | | |    | |____| |____   / ____ \ |__| |  | | | |__| |
+		 |_____/_/    \_\_|  |_|_|    |______|______| /_/    \_\____/   |_|  \____/
+		 */
 		public static PathChain moveToScore = builder
 				.addPath(
 						new BezierLine(
@@ -113,7 +125,16 @@ public class BuildPaths {
 				)
 				.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-45))
 				.build();
+		/*
 
+		   _____ _____  ______ _____           _    _ _______ ____
+		  / ____|  __ \|  ____/ ____|     /\  | |  | |__   __/ __ \
+		 | (___ | |__) | |__ | |         /  \ | |  | |  | | | |  | |
+		  \___ \|  ___/|  __|| |        / /\ \| |  | |  | | | |  | |
+		  ____) | |    | |___| |____   / ____ \ |__| |  | | | |__| |
+		 |_____/|_|    |______\_____| /_/    \_\____/   |_|  \____/
+
+		 */
 	public static PathChain startToBar = builder
 			.addPath(
 					new BezierLine(
@@ -183,7 +204,7 @@ public class BuildPaths {
 			.addPath(
 					new BezierLine(
 							new Point(60.000, 8.000, Point.CARTESIAN),
-							new Point(9.000, 8.000, Point.CARTESIAN)
+							new Point(wall)
 					)
 			)
 			.setConstantHeadingInterpolation(Math.toRadians(0))
@@ -192,9 +213,9 @@ public class BuildPaths {
 	public static PathChain wallToBar = builder
 			.addPath(
 					new BezierCurve(
-							new Point(9.000, 8.000, Point.CARTESIAN),
+							new Point(wall),
 							new Point(9.000, 70.000, Point.CARTESIAN),
-							new Point(39.000, 70.000, Point.CARTESIAN)
+							new Point(bar)
 					)
 			)
 			.setConstantHeadingInterpolation(Math.toRadians(0))
@@ -203,8 +224,8 @@ public class BuildPaths {
 	public static PathChain slideSpecimensAcross = builder
 			.addPath(
 					new BezierLine(
-							new Point(39.000, 70.000, Point.CARTESIAN),
-							new Point(39.000, 68.000, Point.CARTESIAN)
+							new Point(bar),
+							new Point(slide)
 					)
 			)
 			.setConstantHeadingInterpolation(Math.toRadians(0))
@@ -213,19 +234,19 @@ public class BuildPaths {
 	public static PathChain barToWallApproach = builder
 			.addPath(
 					new BezierCurve(
-							new Point(39.000, 68.000, Point.CARTESIAN),
+							new Point(slide),
 							new Point(9.000, 70.000, Point.CARTESIAN),
-							new Point(15.000, 8.000, Point.CARTESIAN)
+							new Point(wallApproach)
 					)
 			)
 			.setConstantHeadingInterpolation(Math.toRadians(0))
 			.build();
 
-	public static PathChain WallApproachToWall = builder
+	public static PathChain wallApproachToWall = builder
 			.addPath(
 					new BezierLine(
-							new Point(15.000, 8.000, Point.CARTESIAN),
-							new Point(9.000, 8.000, Point.CARTESIAN)
+							new Point(wallApproach),
+							new Point(wall)
 					)
 			)
 			.setConstantHeadingInterpolation(Math.toRadians(0))
