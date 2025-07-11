@@ -27,7 +27,7 @@ import pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.subsystems.*;
 
 
-public class blueSampleAuto extends CommandOpMode {
+public class blueSpecAuto extends CommandOpMode {
     private int pathState = 0;
     private Follower follower;
     private Timer pathTimer, actionTimer, opModeTimer;
@@ -53,35 +53,74 @@ public class blueSampleAuto extends CommandOpMode {
     }
 
     @Override
-    public void run(){
-        autonomousPathUpdates();
-        telemetry.addData("pathState", pathState);
-    }
+    public void run(){}
 
     private void autonomousPathUpdates(){
         switch(pathState){
             case 0:
                 new SequentialCommandGroup(
-                    new InstantCommand(() -> follower.followPath(moveToScore)),
-                    CMD.prepForBasket(),
-                    CMD.depositAndReturn()
+                    new InstantCommand(()->follower.followPath(startToBar))
+                    //score specimen
                 ).schedule();
                 setPathState(1);
             case 1:
                 if(!follower.isBusy()){
                     new SequentialCommandGroup(
-                        new InstantCommand(() -> follower.followPath(angleForSm1)),
-                        new IntakeWaitForSample(intake)
+                        new InstantCommand(()->follower.followPath(barToSm1))
                     ).schedule();
                     setPathState(2);
                 }
             case 2:
                 if (!follower.isBusy()){
-                    new SequentialCommandGroup(
-                        new InstantCommand(() -> follower.followPath(scoreSm1))
-                        //SCORE SAMPLE
-                    ).schedule();
+                    new InstantCommand(()->follower.followPath(scoopSm1)).schedule();
                     setPathState(3);
+                }
+            case 3:
+                if (!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(wallToSm2));
+                    setPathState(4);
+                }
+            case 4:
+                if (!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(scoopSm2));
+                    setPathState(5);
+                }
+            case 5:
+                if (!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(wallToSm3));
+                    setPathState(6);
+                }
+            case 6:
+                if(!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(scoopSm3));
+                    //intake the specimen on the wall
+                    setPathState(7);
+                }
+            case 7:
+                if(!follower.isBusy()){
+                    new SequentialCommandGroup(
+                            new InstantCommand(()->follower.followPath(wallToBar))
+                            //score
+                    ).schedule();
+                    setPathState(8);
+                }
+            case 8:
+                if(!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(slideSpecimensAcross));
+                    setPathState(9);
+                }
+            case 9:
+                if (!follower.isBusy()){
+                    new InstantCommand(()->follower.followPath(barToWallApproach));
+                    setPathState(10);
+                }
+            case 10:
+                if (!follower.isBusy()){
+                    new SequentialCommandGroup(
+                        new InstantCommand(()->follower.followPath(wallApproachToWall))
+                        //score specimen
+                    ).schedule();
+                    setPathState(7);
                 }
         }
     }
