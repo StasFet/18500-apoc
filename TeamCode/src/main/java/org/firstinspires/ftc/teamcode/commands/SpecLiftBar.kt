@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.CommandBase
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.subsystems.Lift
 
-class LiftUp(val lift: Lift) : CommandBase() {
+class SpecLiftBar(val lift: Lift) : CommandBase() {
     init {
         addRequirements(lift)
     }
@@ -13,7 +13,7 @@ class LiftUp(val lift: Lift) : CommandBase() {
         lift.doIStopPID = false
         lift.pidf.p = 6.0
         lift.setModes(DcMotor.RunMode.RUN_USING_ENCODER)
-        lift.extensionSetPoint()
+        lift.specBarSetPoint()
     }
 
     override fun isFinished(): Boolean {

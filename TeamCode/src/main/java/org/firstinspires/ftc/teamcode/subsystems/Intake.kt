@@ -114,29 +114,29 @@ public class Intake(val robot: Robot) : SubsystemBase() {
         var green = colourSensor.green()
         var blue = colourSensor.blue()
 
-            var redInTol = abs(red - CS_RED_RGB[0]) <= CS_RED_TOLERANCE[0]
-            var greenInTol = abs(green - CS_RED_RGB[1]) <= CS_RED_TOLERANCE[1]
-            var blueInTol = abs(blue - CS_RED_RGB[2]) <= CS_RED_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) {
-                latestColour = "RED"
-                return Colours.RED
-            }
+        var redInTol = abs(red - CS_YELLOW_RGB[0]) <= CS_YELLOW_TOLERANCE[0]
+        var greenInTol = abs(green - CS_YELLOW_RGB[1]) <= CS_YELLOW_TOLERANCE[1]
+        var blueInTol = abs(blue - CS_YELLOW_RGB[2]) <= CS_YELLOW_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "YELLOW"
+            return Colours.YELLOW
+        }
 
-            redInTol = abs(red - CS_BLUE_RGB[0]) <= CS_BLUE_TOLERANCE[0]
-            greenInTol = abs(green - CS_BLUE_RGB[1]) <= CS_BLUE_TOLERANCE[1]
-            blueInTol = abs(blue - CS_BLUE_RGB[2]) <= CS_BLUE_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) {
-                latestColour = "BLUE"
-                return Colours.BLUE
-            }
+        redInTol = abs(red - CS_RED_RGB[0]) <= CS_RED_TOLERANCE[0]
+        greenInTol = abs(green - CS_RED_RGB[1]) <= CS_RED_TOLERANCE[1]
+        blueInTol = abs(blue - CS_RED_RGB[2]) <= CS_RED_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "RED"
+            return Colours.RED
+        }
 
-            redInTol = abs(red - CS_YELLOW_RGB[0]) <= CS_YELLOW_TOLERANCE[0]
-            greenInTol = abs(green - CS_YELLOW_RGB[1]) <= CS_YELLOW_TOLERANCE[1]
-            blueInTol = abs(blue - CS_YELLOW_RGB[2]) <= CS_YELLOW_TOLERANCE[2]
-            if (redInTol && greenInTol && blueInTol) {
-                latestColour = "YELLOW"
-                return Colours.YELLOW
-            }
+        redInTol = abs(red - CS_BLUE_RGB[0]) <= CS_BLUE_TOLERANCE[0]
+        greenInTol = abs(green - CS_BLUE_RGB[1]) <= CS_BLUE_TOLERANCE[1]
+        blueInTol = abs(blue - CS_BLUE_RGB[2]) <= CS_BLUE_TOLERANCE[2]
+        if (redInTol && greenInTol && blueInTol) {
+            latestColour = "BLUE"
+            return Colours.BLUE
+        }
 
         latestColour = "NONE"
         return Colours.NONE

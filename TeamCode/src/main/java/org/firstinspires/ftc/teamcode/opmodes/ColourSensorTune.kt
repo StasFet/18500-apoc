@@ -26,9 +26,9 @@ class ColourSensorTune : LinearOpMode() {
         waitForStart()
         while (opModeIsActive()) {
             if (!colourSensor.isLightOn) colourSensor.enableLed(true)
-            telemetry.addData("red", colourSensor.red())
-            telemetry.addData("blue", colourSensor.blue())
-            telemetry.addData("green", colourSensor.green())
+            telemetry.addData("1. red", colourSensor.red())
+            telemetry.addData("3. blue", colourSensor.blue())
+            telemetry.addData("2. green", colourSensor.green())
             checkColour()
             var out = latestColour
             telemetry.addData("Colour Detected", out)

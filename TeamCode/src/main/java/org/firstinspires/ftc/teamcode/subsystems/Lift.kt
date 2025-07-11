@@ -7,6 +7,8 @@ import com.arcrobotics.ftclib.controller.PIDFController
 import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.Robot
+import kotlin.math.abs
+import kotlin.math.min
 
 
 @Config
@@ -19,6 +21,9 @@ class Lift(val robot: Robot) : SubsystemBase() {
     val i = 0.0
     val d = 0.02
     val f = 0.0
+
+    var doIStopPID = true
+    var doIStopBrake = true
 
     val pidf: PIDFController = PIDFController(p, i, d, f)
 
@@ -38,6 +43,8 @@ class Lift(val robot: Robot) : SubsystemBase() {
     fun customSetPoint(setPoint: Double) { pidf.setPoint = setPoint }
     fun contractionSetPoint() { customSetPoint(LIFT_DOWN) }
     fun extensionSetPoint() { customSetPoint(LIFT_UP) }
+    fun specWallSetPoint() { customSetPoint(LIFT_SPECIMEN_WALL)}
+    fun specBarSetPoint() { customSetPoint(LIFT_SPECIMEN_BAR)}
 
     fun setVelocity(vel: Double) {
         right.velocity = vel
@@ -61,11 +68,21 @@ class Lift(val robot: Robot) : SubsystemBase() {
     fun atSetPoint() = pidf.atSetPoint()
 
     fun brake(power: Double) {
-        left.targetPosition = left.currentPosition
-        right.targetPosition = right.currentPosition
-        setModes(DcMotor.RunMode.RUN_TO_POSITION)
-        setPowers(power)
+//        left.targetPosition = left.currentPosition
+//        right.targetPosition = right.currentPosition
+//        setModes(DcMotor.RunMode.RUN_TO_POSITION)
+//        setPowers(power)
         //setVelocity(0.0)
+
+        var error = abs(LIFT_UP - right.currentPosition)
+        var final = 0.0
+
+        if (error > LIFT_TOLERANCE) {
+            var kp = 0.00001
+            final = min(abs(power), abs(error*kp))
+        }
+
+        setPowers(final)
     }
 
     fun brake(power: Double, offset: Int) {

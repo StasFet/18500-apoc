@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.core
 
+import android.widget.GridLayout.Spec
 import com.arcrobotics.ftclib.command.Command
 import com.arcrobotics.ftclib.command.CommandBase
 import com.arcrobotics.ftclib.command.ConditionalCommand
@@ -11,12 +12,7 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup
 import com.arcrobotics.ftclib.command.WaitCommand
 import com.qualcomm.hardware.ams.AMSColorSensor.Wait
 import org.firstinspires.ftc.teamcode.commands.IntakeExtend
-import org.firstinspires.ftc.teamcode.commands.IntakeRetract
-import org.firstinspires.ftc.teamcode.commands.IntakeWaitForSample
-import org.firstinspires.ftc.teamcode.commands.LiftDown
-import org.firstinspires.ftc.teamcode.commands.LiftUp
-import org.firstinspires.ftc.teamcode.commands.PrepForTransfer
-import org.firstinspires.ftc.teamcode.commands.ZeroIntakeSlides
+import org.firstinspires.ftc.teamcode.commands.*
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.subsystems.*
 
@@ -89,6 +85,21 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
             )
     }
 
+    // goes to the wall position
+    fun prepForSpec() : Command {
+        return ConditionalCommand(
+            SequentialCommandGroup(
+                SpecLiftWall(lift),
+                WaitCommand(50),
+                InstantCommand({outtake.setPosition(ARM_SPEC_WALL)}),
+                WaitCommand(300),
+                InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)}),
+            ),
+            InstantCommand(),
+            { intake.state == SubsystemStates.IntakeStates.TRANSFER }
+        )
+    }
+
     fun depositAndReturn() : Command {
         return SequentialCommandGroup(
             InstantCommand({outtake.clawOpen()}),
@@ -107,24 +118,39 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     }
     fun specDropOff() : Command {
         return SequentialCommandGroup(
-            InstantCommand({outtake.setPosition(ARM_DEPOSIT_SAMPLE)}),
-            InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)}),
-        )
+            InstantCommand({outtake.clawOpen()}),
+            WaitCommand(100),
+            InstantCommand({outtake.setLinkagePos(ARM_LINK_TRANSFER)}),
+            WaitCommand(50),
+            InstantCommand({outtake.setPosition(ARM_TRANSFER)}),
+            WaitCommand(50),
+            LiftDown(lift,outtake)
+
+            )
 
     }
 
-    fun specPickUp() : Command {
+    /*fun specPickUp() : Command {
         return SequentialCommandGroup(
+            WaitCommand(50),
             InstantCommand({outtake.setPosition(ARM_SPEC_WALL)}),
-            InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)})
+            WaitCommand(50),
+            InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)}),
+
+
         )
-    }
+    }*/
 
     fun specHighBar() : Command {
-        return SequentialCommandGroup (
-            InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
-            InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_BAR)}),
-            InstantCommand({ VSLIDES_SPECIMEN_DEPOSIT})
+        return ParallelCommandGroup(
+            SequentialCommandGroup(
+
+                InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
+                WaitCommand(50),
+                InstantCommand({outtake.clawClose()}),
+
+            ),
+            SpecLiftBar(lift)
         )
     }
 
@@ -134,8 +160,10 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                 ZeroIntakeSlides(intake),
                 InstantCommand({intake.cycleCount = 0})
             ),
-            WaitCommand(1),
+            InstantCommand(),
             {intake.cycleCount >= CYCLES_PER_SLIDE_RESET}
         )
     }
+
+
 }

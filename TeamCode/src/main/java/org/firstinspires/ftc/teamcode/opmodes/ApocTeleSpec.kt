@@ -27,8 +27,8 @@ import org.firstinspires.ftc.teamcode.core.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.*
 import pedroPathing.constants.*
 
-@TeleOp(name="APOC TeleOp")
-class ApocTele() : CommandOpMode() {
+@TeleOp(name="APOC TeleOp Specimen")
+class ApocTeleSpec() : CommandOpMode() {
 
     lateinit var robot: Robot
     lateinit var odo: GoBildaPinpointDriver
@@ -36,6 +36,7 @@ class ApocTele() : CommandOpMode() {
     val startPose: Pose = Pose(0.0, 0.0, Math.toRadians(0.0))
     val dashboard: FtcDashboard = FtcDashboard.getInstance()
     lateinit var CMD: Commands
+    var isReadyForPickup = false;
 
     lateinit var dt: MecanumDrive
     lateinit var intake: Intake
@@ -54,6 +55,9 @@ class ApocTele() : CommandOpMode() {
     lateinit var vSlideResetBtn: GamepadButton
     lateinit var stopEverythingBtn: GamepadButton
     lateinit var intakeStartPositionBtn: GamepadButton
+    lateinit var specDropOffBtn: GamepadButton
+    lateinit var pickUpSpecBtn: GamepadButton
+    lateinit var grabFromWallBtn: GamepadButton
 
     override fun initialize() {
 
@@ -76,8 +80,9 @@ class ApocTele() : CommandOpMode() {
         intakeRetractBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.B) //was originally AZ
         intakeEjectBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.X)
         transferBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.A)
-        liftUpBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.LEFT_BUMPER)
-        liftDownBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.RIGHT_BUMPER)
+        specDropOffBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.LEFT_BUMPER)
+        pickUpSpecBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.RIGHT_BUMPER)
+        grabFromWallBtn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.DPAD_UP)
 
 
         hSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.DPAD_LEFT)
@@ -116,8 +121,8 @@ class ApocTele() : CommandOpMode() {
             WaitCommand(50),
             CMD.transfer(),
             //CMD.transferFailsafe(),
-            WaitCommand(50),
-            CMD.prepForBasket(),
+            WaitCommand(200),
+            CMD.prepForSpec(),
             ParallelCommandGroup(
                 CMD.zeroIntakeSlidesAutomatically(),
                 InstantCommand({outtake.clawClose()})
@@ -128,10 +133,7 @@ class ApocTele() : CommandOpMode() {
         )
 
         //transferBtn.whenPressed(CMD.transfer(intake, outtake), true)
-        liftUpBtn.whenPressed(LiftUp(lift))
-        liftDownBtn.whenPressed(SequentialCommandGroup(
-            CMD.depositAndReturn(),
-        ), true)
+
         hSlideResetBtn.whenPressed(ZeroIntakeSlides(intake))
 
         intakeStartPositionBtn.whenPressed(SequentialCommandGroup(
@@ -139,14 +141,68 @@ class ApocTele() : CommandOpMode() {
             InstantCommand({intake.state = SubsystemStates.IntakeStates.IDLE}),
         ))
 
+        specDropOffBtn.whenPressed(SequentialCommandGroup(
+            CMD.specDropOff(),
+            CMD.prepForSpec()
+        ))
+
+        pickUpSpecBtn.whenPressed(
+            SequentialCommandGroup(
+                //LiftDown(lift, outtake),
+                InstantCommand({outtake.setLinkagePos(ARM_LINK_IN)}),
+                WaitCommand(50),
+                InstantCommand  ({outtake.setPosition(ARM_SPEC_WALL)}),
+                WaitCommand(50),
+                InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)}),
+                InstantCommand({isReadyForPickup = true})
+            )
+        )
+
+        grabFromWallBtn.whenPressed(
+            SequentialCommandGroup(
+                InstantCommand({isReadyForPickup = false}),
+                InstantCommand({outtake.claw.setPosition(0.25)}),
+                WaitCommand(200),
+                CMD.specHighBar(),
+                InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_BAR)}),
+            )
+        )
+
+
+
+//        pickUpSpecBtn.whenPressed(ConditionalCommand(
+//            // onTrue
+//            SequentialCommandGroup(
+//                InstantCommand({isReadyForPickup = false}),
+//                InstantCommand({outtake.claw.setPosition(0.25)}),
+//                WaitCommand(50),
+//                CMD.specHighBar()
+//            ),
+//            // onFalse
+//            SequentialCommandGroup(
+//                LiftDown(lift, outtake),
+//                InstantCommand({outtake.setLinkagePos(ARM_LINK_IN)}),
+//                WaitCommand(50),
+//                InstantCommand  ({outtake.setPosition(ARM_SPEC_WALL)}),
+//                WaitCommand(50),
+//                InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)}),
+//                WaitCommand(1000),
+//                InstantCommand({isReadyForPickup = true})
+//            ),
+//            {isReadyForPickup}
+//        ))
     }
 
     override fun run() {
         odo.update()
         follower.update()
-        //runtimeControls()
+        runtimeControls()
         super.run()
         telemetry()
+    }
+
+    fun runtimeControls() {
+
     }
 
     fun telemetry() {
@@ -168,11 +224,7 @@ class ApocTele() : CommandOpMode() {
 
         //telemetry.addData("")
         //telemetry.addData("Intake Current", intake.intake.getCurrent(CurrentUnit.MILLIAMPS))
-        telemetry.addData("Colour detected", intake.latestColour)
-        telemetry.addData("Colour sensor red", intake.colourSensor.red())
-        telemetry.addData("Colour sensor green", intake.colourSensor.green())
-        telemetry.addData("Colour sensor blue", intake.colourSensor.blue())
-
+        //telemetry.addData("Colour detected", intake.latestColour)
         telemetry.addData("Intake position", intake.slide.currentPosition)
         telemetry.addData("Intake slide power", intake.slide.power)
         telemetry.addData("Left vslide power", lift.left.power)

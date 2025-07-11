@@ -11,7 +11,10 @@ class ZeroVerticalSlides(val lift: Lift): CommandBase() {
     }
 
     override fun initialize() {
-        lift.setPowers(-0.5)
+        lift.doIStopPID = true
+        lift.doIStopBrake = true
+        lift.setModes(DcMotor.RunMode.RUN_USING_ENCODER)
+        lift.setPowers(-0.8)
     }
 
     override fun isFinished() = lift.touch.isPressed

@@ -19,7 +19,10 @@ public class Constants {
     // lift
     public static double LIFT_TOLERANCE = 25;
     public static double LIFT_UP = -800; //has been tested
-    public static double LIFT_DOWN = 15; //has been tested
+    public static double LIFT_DOWN = 25; //has been tested
+    public static double LIFT_SPECIMEN_WALL = -150;
+    public static double LIFT_SPECIMEN_BAR = -370; //used to be 410
+
 
     // intake
     public static double INTAKE_TOLERANCE = 30;
@@ -31,13 +34,13 @@ public class Constants {
     public static double INTAKE_WRIST_TRANSFER = 0.28;
     public static double INTAKE_STOP_OPEN = 0.55; //has been changed
     public static double INTAKE_STOP_CLOSED = 1; //hsa been changed
-    public static double INTAKE_STALL_CURRENT_MA = 5800;
+    public static double INTAKE_STALL_CURRENT_MA = 5500;
     public static double INTAKE_SLIDE_STALL_CURRENT_MA = 6000;
-    public static double INTAKE_EJECT_PWR = 1.0;
+    public static double INTAKE_EJECT_PWR = 0.8;
     public static double INTAKE_PWR = -1.0;
     public static double INTAKE_START_POSITION = 0.58;
     public static double INTAKE_HOVER = 0.35;
-    public static int CYCLES_PER_SLIDE_RESET = 5;
+    public static int CYCLES_PER_SLIDE_RESET = 1;
     public static int INTAKE_EJECT_TIMEOUT = 300;
 
     // hang
@@ -49,10 +52,10 @@ public class Constants {
     // outtake
     public static double CLAW_OPEN = 0.4; //has been tested
     public static double CLAW_CLOSED = 0.2; //has been tested
-    public static double ARM_SPEC_WALL = 0.07;
-    public static double LINKAGE_SPEC_WALL = 0.07;
-    public static double ARM_SPEC_BAR = 0.82;
-    public static double ARM_SPEC = 0.82;
+    public static double ARM_SPEC_WALL = 0.122;
+    public static double LINKAGE_SPEC_WALL = 0.75;
+    public static double ARM_SPEC_BAR = 0.75;
+    public static double ARM_SPEC = 0.75;
     public static double ARM_TRANSFER = 0.89;
     //public static double ARM_LOW_BAR = 0.7;
     public static double ARM_DEPOSIT_SAMPLE = 0.3;
@@ -61,18 +64,17 @@ public class Constants {
     public static double ARM_LINK_TRANSFER = 0.8;
     public static double ARM_LINK_IN = 0.9;
     public static double ARM_START = 0.2;
-    public static double VSLIDES_SPECIMEN_DEPOSIT = 500;
     public static double LINKAGE_SPEC_BAR = 0.07;
 
     // -------- COLOUR SENSOR --------
     public static int[] CS_RED_RGB = {630, 335, 153};
     public static int[] CS_RED_TOLERANCE = {175, 90, 55};
 
-    public static int[] CS_YELLOW_RGB = {1075, 1300, 270};
-    public static int[] CS_YELLOW_TOLERANCE = {260, 325, 60};
+    public static int[] CS_YELLOW_RGB = {975, 1100, 270};
+    public static int[] CS_YELLOW_TOLERANCE = {250, 350, 65};
 
-    public static int[] CS_BLUE_RGB = {125, 252, 605};
-    public static int[] CS_BLUE_TOLERANCE = {45, 70, 165};
+    public static int[] CS_BLUE_RGB = {125, 252, 525};
+    public static int[] CS_BLUE_TOLERANCE = {45, 70, 170};
 
 // -----------------------------------------------------------------------------
     // -------- HARDWARE NAMES --------
