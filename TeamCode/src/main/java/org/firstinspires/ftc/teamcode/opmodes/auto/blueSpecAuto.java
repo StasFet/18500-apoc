@@ -92,8 +92,10 @@ public class blueSpecAuto extends CommandOpMode {
                 }
             case 6:
                 if(!follower.isBusy()){
-                    new InstantCommand(()->follower.followPath(scoopSm3));
-                    //intake the specimen on the wall
+                    new SequentialCommandGroup(
+                            new InstantCommand(()->follower.followPath(scoopSm3))
+                            //score
+                    ).schedule();
                     setPathState(7);
                 }
             case 7:

@@ -12,8 +12,8 @@ public class LConstants {
     static {
 
         //stuff for us to use - pinpoint odometry constants from pedropathing website
-        PinpointConstants.forwardY = 6;
-        PinpointConstants.strafeX = 13.5;
+        PinpointConstants.forwardY = 5.4;
+        PinpointConstants.strafeX = 12.5345545;
         PinpointConstants.distanceUnit = DistanceUnit.CM;
         PinpointConstants.hardwareMapName = Constants.NAME_PINPOINT;
         PinpointConstants.useYawScalar = false;

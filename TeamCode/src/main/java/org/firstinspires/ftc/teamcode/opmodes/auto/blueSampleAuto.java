@@ -86,7 +86,7 @@ public class blueSampleAuto extends CommandOpMode {
             case 3:
                 if(!follower.isBusy()){
                     follower.followPath(angleForSm2);
-                    //INTAKE SAMPLE
+                    new IntakeWaitForSample(intake);
                     setPathState(4);
                 }
             case 4:

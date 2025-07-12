@@ -32,7 +32,7 @@ public class FConstants {
 //        FollowerConstants.rightFrontMotorMulti = 1.0;
 //        FollowerConstants.rightRearMotorMulti = 1.0;
 
-        FollowerConstants.mass = 10;
+        FollowerConstants.mass = 14;
 
         //34.568
         FollowerConstants.xMovement = 34.568;
