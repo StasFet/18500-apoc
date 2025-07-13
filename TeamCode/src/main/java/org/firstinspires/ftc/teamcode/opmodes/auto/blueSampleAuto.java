@@ -75,11 +75,11 @@ public class blueSampleAuto extends CommandOpMode {
         Follower follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         switch(pathState){
             case 0:
-                //new SequentialCommandGroup(
-                    new InstantCommand(() -> follower.followPath(moveToScore));
-//                    CMD.prepForBasket(),
-//                    CMD.depositAndReturn()
-//                ).schedule();
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> follower.followPath(moveToScore)),
+                    CMD.prepForBasket(),
+                    CMD.depositAndReturn()
+                ).schedule();
                 setPathState(1);
             case 1:
                 if(!follower.isBusy()){

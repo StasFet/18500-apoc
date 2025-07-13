@@ -16,6 +16,37 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
+import static org.firstinspires.ftc.teamcode.core.Constants.ARM_START;
+import static org.firstinspires.ftc.teamcode.core.Constants.INTAKE_START_POSITION;
+import static org.firstinspires.ftc.teamcode.core.PIDTune.intake;
+import static org.firstinspires.ftc.teamcode.opmodes.auto.BuildPaths.*;
+
+import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.*;
+
+import org.firstinspires.ftc.teamcode.commands.IntakeWaitForSample;
+import org.firstinspires.ftc.teamcode.core.Robot;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
+import com.pedropathing.util.DashboardPoseTracker;
+import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.core.Commands;
+
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.subsystems.*;
+
+import static org.firstinspires.ftc.teamcode.core.Constants.*;
+
 /**
  * This is an example auto that showcases movement and control of two servos autonomously.
  * It is a 0+4 (Specimen + Sample) bucket auto. It scores a neutral preload and then pickups 3 samples from the ground and scores them before parking.
@@ -31,7 +62,12 @@ public class Goodna extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
-
+    private Commands CMD;
+    private Intake intake;
+    private Outtake outtake;
+    private Lift lift;
+    private MecanumDrive dt;
+    private Robot robot;
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
     private int pathState;
@@ -144,7 +180,11 @@ public class Goodna extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload);
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> follower.followPath(scorePreload,true)),
+                        CMD.prepForBasket(),
+                        CMD.depositAndReturn()
+                ).schedule();
                 setPathState(1);
                 break;
             case 1:
@@ -156,10 +196,10 @@ public class Goodna extends OpMode {
                 */
                 /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if(!follower.isBusy()) {
-                    /* Score Preload */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(grabPickup1,true);
+                    new SequentialCommandGroup(
+                            new InstantCommand(() -> follower.followPath(grabPickup1,true)),
+                            new IntakeWaitForSample(intake)
+                    ).schedule();
                     setPathState(2);
                 }
                 break;
@@ -263,14 +303,29 @@ public class Goodna extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
+        //instantiate robot stuff
+        CommandScheduler.getInstance().reset();
+        robot = new Robot(hardwareMap, telemetry, gamepad1, gamepad2);
+        dt = new MecanumDrive(robot);
+        robot.setColours(Intake.Colours.BLUE, Intake.Colours.YELLOW);
+        intake = new Intake(robot);
+        outtake = new Outtake(robot);
+        lift = new Lift(robot);
+        CMD = new Commands(intake, outtake, lift);
+        //setup timers
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-
+        //setup follower
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap, FConstants.class, LConstants.class);      // after making local changes to pp it made me add the 2nd and 3rd param??
         follower.setStartingPose(startPose);
         buildPaths();
+        //init robot position
+        intake.wristToPos(INTAKE_START_POSITION);
+        outtake.setPosition(ARM_START);
+        outtake.setLinkagePos(ARM_LINK_IN);
+        outtake.clawClose();
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
