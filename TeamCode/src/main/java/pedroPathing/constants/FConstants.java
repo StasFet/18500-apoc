@@ -32,14 +32,14 @@ public class FConstants {
 //        FollowerConstants.rightFrontMotorMulti = 1.0;
 //        FollowerConstants.rightRearMotorMulti = 1.0;
 
-        FollowerConstants.mass = 14;
+        FollowerConstants.mass = 14.9;
 
         //34.568
-        FollowerConstants.xMovement = 34.568;
-        FollowerConstants.yMovement = 56.8;   //50.412
+        FollowerConstants.xMovement = 60.52930269485795;
+        FollowerConstants.yMovement = 41.37305417904997;   //50.412
 
-        FollowerConstants.forwardZeroPowerAcceleration = -29.278;
-        FollowerConstants.lateralZeroPowerAcceleration = -35.898;
+        FollowerConstants.forwardZeroPowerAcceleration = -30.36955620458213;
+        FollowerConstants.lateralZeroPowerAcceleration = -80.61373962204883;
 
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0);
         FollowerConstants.useSecondaryTranslationalPID = false;
@@ -49,11 +49,11 @@ public class FConstants {
         FollowerConstants.useSecondaryHeadingPID = false;
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0);
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.03,0,0.000005,0.6,0);
         FollowerConstants.useSecondaryDrivePID = false;
         FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
 
-        FollowerConstants.zeroPowerAccelerationMultiplier = 4;
+        FollowerConstants.zeroPowerAccelerationMultiplier = 1;
         FollowerConstants.centripetalScaling = 0.0005;
 
         FollowerConstants.pathEndTimeoutConstraint = 500;
