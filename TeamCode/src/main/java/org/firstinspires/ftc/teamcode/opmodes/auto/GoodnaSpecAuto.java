@@ -182,14 +182,16 @@ public class GoodnaSpecAuto extends CommandOpMode {
 
 		Command score = new SequentialCommandGroup(
 				new InstantCommand(()->follower.followPath(scoreSpecimen,true)),
+                new WaitUntilCommand(() -> !follower.isBusy()),
 				CMD.specHighBar(),
-				new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(200),
 				// starts at scorePose
 				new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
 				new WaitUntilCommand(() -> !follower.isBusy()),
 				new InstantCommand(()->follower.followPath(parkApproach,true)),
+                new WaitUntilCommand(() -> !follower.isBusy()),
 				CMD.postSpecAuto(),
-				new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(200),
 				// ends at parkPose
 				new InstantCommand(()->follower.followPath(scoringPark,true)),
 				new WaitUntilCommand(() -> !follower.isBusy())
@@ -207,6 +209,7 @@ public class GoodnaSpecAuto extends CommandOpMode {
 								//score preloaded specimen
 								new WaitCommand(100),
 								CMD.postSpecAuto(),
+                                new WaitCommand(200),
 								new InstantCommand(() -> follower.followPath(grabPickup1, true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(() -> follower.followPath(dropoffPickup1, true)),
