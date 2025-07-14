@@ -44,6 +44,7 @@ class ApocTeleSpec() : CommandOpMode() {
     lateinit var fcDrive: FcDrive
     lateinit var outtake: Outtake
     lateinit var lift: Lift
+    lateinit var hang: Hang
 
     lateinit var intakeExtendBtn: GamepadButton
     lateinit var intakeRetractBtn: GamepadButton
@@ -58,6 +59,8 @@ class ApocTeleSpec() : CommandOpMode() {
     lateinit var specDropOffBtn: GamepadButton
     lateinit var pickUpSpecBtn: GamepadButton
     lateinit var grabFromWallBtn: GamepadButton
+    lateinit var hangLvl2Btn: GamepadButton
+    lateinit var hangLvl3Btn: GamepadButton
 
     override fun initialize() {
 
@@ -89,6 +92,8 @@ class ApocTeleSpec() : CommandOpMode() {
         vSlideResetBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.DPAD_UP)
         stopEverythingBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.X) //2nd driver aka stas
         intakeStartPositionBtn = GamepadButton(robot.gpDrive, GamepadKeys.Button.Y) //2nd driver aka stas
+        hangLvl2Btn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.RIGHT_BUMPER)
+        hangLvl3Btn = GamepadButton(robot.gpGeneral, GamepadKeys.Button.LEFT_BUMPER)
 
         //Constants.setConstants(FConstants::class.java, LConstants::class.java)
         register(dt, intake, outtake)
@@ -165,6 +170,18 @@ class ApocTeleSpec() : CommandOpMode() {
                 WaitCommand(200),
                 CMD.specHighBar(),
                 InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_BAR)}),
+            )
+        )
+
+        hangLvl2Btn.whenPressed(
+            SequentialCommandGroup(
+                HangUp(hang,robot)
+            )
+        )
+
+        hangLvl3Btn.whenPressed(
+            SequentialCommandGroup(
+
             )
         )
 
