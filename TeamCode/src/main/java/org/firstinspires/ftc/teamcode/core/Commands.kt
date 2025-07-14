@@ -89,11 +89,14 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     fun prepForSpec() : Command {
         return ConditionalCommand(
             SequentialCommandGroup(
+                InstantCommand({outtake.clawOpen()}),
                 SpecLiftWall(lift),
                 WaitCommand(50),
-                InstantCommand({outtake.setPosition(ARM_SPEC_WALL)}),
-                WaitCommand(300),
                 InstantCommand({outtake.setLinkagePos(LINKAGE_SPEC_WALL)}),
+
+                WaitCommand(200),
+                InstantCommand({outtake.setPosition(ARM_SPEC_WALL)}),
+
             ),
             InstantCommand(),
             { intake.state == SubsystemStates.IntakeStates.TRANSFER }
@@ -144,8 +147,10 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     fun specHighBar() : Command {
         return ParallelCommandGroup(
             SequentialCommandGroup(
-
-                InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
+                InstantCommand({
+                    outtake.setPosition(ARM_SPEC_BAR)
+                    outtake.setLinkagePos(ARM_LINK_OUT)
+                }),
                 WaitCommand(50),
                 InstantCommand({outtake.clawClose()}),
 
@@ -165,5 +170,16 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
         )
     }
 
-
+    // to run after scoring a specimen in auto to reset for grabbing spec from wall
+    fun postSpecAuto() : Command {
+        return SequentialCommandGroup(
+            InstantCommand({outtake.clawOpen()}),
+            WaitCommand(50),
+            InstantCommand({
+                outtake.setLinkagePos(LINKAGE_SPEC_WALL)
+                outtake.setPosition(ARM_SPEC_WALL)
+            }),
+            LiftDown(lift, outtake)
+        )
+    }
 }
