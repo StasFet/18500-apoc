@@ -55,8 +55,8 @@ public class GoodnaSpecAuto extends CommandOpMode {
 	private int pathState;
 
 	private final Pose startPose = new Pose(8.75, 65.250, Math.toRadians(0));
-	private final Pose preloadScorePose = new Pose(39,65.250,Math.toRadians(0));
-	private final Pose scorePose = new Pose(39, 70, Math.toRadians(0));
+	private final Pose preloadScorePose = new Pose(39,66,Math.toRadians(0));
+	private final Pose scorePose = new Pose(39, 66, Math.toRadians(5));
 	private final Pose scoochPose = new Pose(39, 68.5, Math.toRadians(0));
 	private final Pose scoreControlPose = new Pose(8.750, 70.000, Math.toRadians(0));
 	private final Pose pickup1Pose = new Pose(61.500, 27.000, Math.toRadians(0));
@@ -143,18 +143,18 @@ public class GoodnaSpecAuto extends CommandOpMode {
 				.build();
 
 		scoreSpecimen = follower.pathBuilder()
-				.addPath(new BezierCurve(new Point(parkPose),new Point(scoreControlPose), new Point(scorePose)))
-				.setConstantHeadingInterpolation(Math.toRadians(0))
+				.addPath(new BezierLine(new Point(parkPose),new Point(scorePose)))
+				.setLinearHeadingInterpolation(0,Math.toRadians(5))
 				.build();
 
-		scoochSpecimens = follower.pathBuilder()
-				.addPath(new BezierLine(new Point(scorePose), new Point(scoochPose)))
-				.setConstantHeadingInterpolation(Math.toRadians(0))
-				.build();
+		//scoochSpecimens = follower.pathBuilder()
+		//		.addPath(new BezierLine(new Point(scorePose), new Point(scoochPose)))
+		//		.setConstantHeadingInterpolation(Math.toRadians(0))
+		//		.build();
 
 		parkApproach = follower.pathBuilder()
-				.addPath(new BezierCurve(new Point(scoochPose),new Point(scoreControlPose), new Point(parkApproachPose)))
-				.setConstantHeadingInterpolation(Math.toRadians(0))
+				.addPath(new BezierLine(new Point(scorePose), new Point(parkApproachPose)))
+				.setLinearHeadingInterpolation(Math.toRadians(5),0)
 				.build();
 
 		//park path for whilst scoring - seperate from the park after collecting!!
@@ -210,8 +210,8 @@ public class GoodnaSpecAuto extends CommandOpMode {
 				),
                 new WaitUntilCommand(() -> !follower.isBusy()),
 				// starts at scorePose
-				new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
-				new WaitUntilCommand(() -> !follower.isBusy()),
+				//new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
+				//new WaitUntilCommand(() -> !follower.isBusy()),
 				new InstantCommand(()-> outtake.clawOpen()),
 				new ParallelCommandGroup(
 						CMD.postSpecAuto(),
