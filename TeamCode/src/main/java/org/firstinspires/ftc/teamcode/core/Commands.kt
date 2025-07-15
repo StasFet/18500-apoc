@@ -147,12 +147,12 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
     fun specHighBar() : Command {
         return ParallelCommandGroup(
             SequentialCommandGroup(
-                InstantCommand({
-                    outtake.setPosition(ARM_SPEC_BAR)
-                    outtake.setLinkagePos(ARM_LINK_OUT)
-                }),
-                WaitCommand(50),
+                InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
+                WaitCommand(100),
                 InstantCommand({outtake.clawClose()}),
+                WaitCommand(400),
+                InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)}),
+
 
             ),
             SpecLiftBar(lift)

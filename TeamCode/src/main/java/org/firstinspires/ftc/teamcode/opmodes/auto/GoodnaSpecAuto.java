@@ -57,20 +57,25 @@ public class GoodnaSpecAuto extends CommandOpMode {
 	private final Pose startPose = new Pose(8.75, 65.250, Math.toRadians(0));
 	private final Pose preloadScorePose = new Pose(39,65.250,Math.toRadians(0));
 	private final Pose scorePose = new Pose(39, 70, Math.toRadians(0));
-	private final Pose scoochPose = new Pose(39, 69, Math.toRadians(0));
+	private final Pose scoochPose = new Pose(39, 68.5, Math.toRadians(0));
 	private final Pose scoreControlPose = new Pose(8.750, 70.000, Math.toRadians(0));
 	private final Pose pickup1Pose = new Pose(61.500, 27.000, Math.toRadians(0));
 	private final Pose pickup1Control1Pose = new Pose(9.900, 30.400, Math.toRadians(0));
 	private final Pose pickup1Control2Pose = new Pose(67.000, 40.000, Math.toRadians(0));
 	private final Pose dropoff1Pose = new Pose(18.000, 27.000, Math.toRadians(0));
+	private final Pose dropoff1Control1Pose = new Pose(-30, 24, Math.toRadians(0));
+	private final Pose dropoff1Control2Pose = new Pose(51.5, 22, Math.toRadians(0));
+	private final Pose dropoff1Control3Pose = new Pose(62, 30, Math.toRadians(0));
 	private final Pose pickup2Pose = new Pose(60.400, 16, Math.toRadians(0));
-	private final Pose pickup2Control1Pose = new Pose(61.500, 22.800, Math.toRadians(0));
-	private final Pose pickup2Control2Pose = new Pose(58.300, 25.700, Math.toRadians(0));
+	//private final Pose pickup2Control1Pose = new Pose(61.500, 22.800, Math.toRadians(0));
+	//private final Pose pickup2Control2Pose = new Pose(58.300, 25.700, Math.toRadians(0));
 	private final Pose dropoff2Pose = new Pose(20.000, 16.000, Math.toRadians(0));
-	private final Pose pickup3Pose = new Pose(60.000, 10.000, Math.toRadians(0));
-	private final Pose pickup3ControlPose = new Pose(64.177, 15.116, Math.toRadians(0));
+	//private final Pose pickup3Pose = new Pose(60.000, 10.000, Math.toRadians(0));
+	//private final Pose pickup3ControlPose = new Pose(64.177, 15.116, Math.toRadians(0));
+	private final Pose pickup3Control1Pose = new Pose(51, 16, Math.toRadians(0));
+	private final Pose pickup3Control2Pose = new Pose(100, 6, Math.toRadians(0));
 	private final Pose dropoff3Pose = new Pose(15,10,Math.toRadians(0));
-	private final Pose parkPose = new Pose(9.750, 34.000, Math.toRadians(0));
+	private final Pose parkPose = new Pose(9.0, 34.000, Math.toRadians(0));
 	private final Pose parkControl1Pose = new Pose(28.000, 5.000, Math.toRadians(0));
 	private final Pose parkControl2Pose = new Pose(20,38,Math.toRadians(0));
 	private final Pose parkApproachPose = new Pose(15, 34.000, Math.toRadians(0));
@@ -93,36 +98,47 @@ public class GoodnaSpecAuto extends CommandOpMode {
 				.build();
 
 		dropoffPickup1 = follower.pathBuilder()
-				.addPath(new BezierLine(new Point(pickup1Pose), new Point(dropoff1Pose)))
-				.setConstantHeadingInterpolation(Math.toRadians(0))
-				.build();
-
-		grabPickup2 = follower.pathBuilder()
 				.addPath(new BezierCurve(
-						new Point(dropoff1Pose),
-						new Point(pickup2Control1Pose),
-						new Point(pickup2Control2Pose),
-						new Point(pickup2Pose)
+						new Point(pickup1Pose),
+						new Point(dropoff1Control1Pose),
+						new Point(dropoff1Control2Pose),
+						new Point(dropoff1Control3Pose),
+						new Point(dropoff1Pose)
 				))
 				.setConstantHeadingInterpolation(Math.toRadians(0))
 				.build();
+
+		//grabPickup2 = follower.pathBuilder()
+		//		.addPath(new BezierCurve(
+		//				new Point(dropoff1Pose),
+		//				new Point(pickup2Control1Pose),
+		//				new Point(pickup2Control2Pose),
+		//				new Point(pickup2Pose)
+		//		))
+		//		.setConstantHeadingInterpolation(Math.toRadians(0))
+		//		.build();
 
 		dropoffPickup2 = follower.pathBuilder()
 				.addPath(new BezierLine(new Point(pickup2Pose),new Point(dropoff2Pose)))
 				.setConstantHeadingInterpolation(Math.toRadians(0))
 				.build();
 
-		grabPickup3 = follower.pathBuilder()
-				.addPath(new BezierCurve(
-						new Point(dropoff2Pose),
-						new Point(pickup3ControlPose),
-						new Point(pickup3Pose)
-				))
-				.setConstantHeadingInterpolation(Math.toRadians(0))
-				.build();
+		//grabPickup3 = follower.pathBuilder()
+		//		.addPath(new BezierCurve(
+		//				new Point(dropoff2Pose),
+		//				new Point(pickup3ControlPose),
+		//				new Point(pickup3Pose)
+		//		))
+		//		.setConstantHeadingInterpolation(Math.toRadians(0))
+		//		.build();
 
 		dropoffPickup3 = follower.pathBuilder()
-				.addPath(new BezierLine(new Point(pickup3Pose), new Point(dropoff3Pose)))
+				.addPath(new BezierCurve(
+						new Point(dropoff2Pose),
+						new Point(pickup3Control1Pose),
+						new Point(pickup3Control2Pose),
+						new Point(dropoff3Pose)
+				))
 				.setConstantHeadingInterpolation(Math.toRadians(0))
 				.build();
 
@@ -182,7 +198,7 @@ public class GoodnaSpecAuto extends CommandOpMode {
 		boolean dropIntake = false;
 
 		Command score = new SequentialCommandGroup(
-				new InstantCommand(() ->outtake.clawClose()),
+				new InstantCommand(() ->outtake.getClaw().setPosition(0.25)),
 				new WaitCommand(200),
 				new ParallelCommandGroup(
 						CMD.specHighBar(),
@@ -193,14 +209,15 @@ public class GoodnaSpecAuto extends CommandOpMode {
 
 				),
                 new WaitUntilCommand(() -> !follower.isBusy()),
-                new WaitCommand(200),
 				// starts at scorePose
 				new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
 				new WaitUntilCommand(() -> !follower.isBusy()),
-				new InstantCommand(()->follower.followPath(parkApproach,true)),
-				CMD.postSpecAuto(),
+				new InstantCommand(()-> outtake.clawOpen()),
+				new ParallelCommandGroup(
+						CMD.postSpecAuto(),
+						new InstantCommand(()->follower.followPath(parkApproach,true))
+				),
                 new WaitUntilCommand(() -> !follower.isBusy()),
-                new WaitCommand(200),
 				// ends at parkPose
 				new InstantCommand(()->follower.followPath(scoringPark,true)),
 				new WaitUntilCommand(() -> !follower.isBusy()),
@@ -215,31 +232,31 @@ public class GoodnaSpecAuto extends CommandOpMode {
                                 new ParallelCommandGroup(
                                         CMD.specHighBar(),
 										new SequentialCommandGroup(
-												new WaitCommand(500),
+												new WaitCommand(300),
 												new InstantCommand(() -> follower.followPath(scorePreload))
 										)
                                 ),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								//score preloaded specimen
-								new WaitCommand(100),
-								CMD.postSpecAuto(),
-                                new WaitCommand(200),
-								new InstantCommand(() -> follower.followPath(grabPickup1, true)),
+								new InstantCommand(()-> outtake.clawOpen()),
+								new ParallelCommandGroup(
+									CMD.postSpecAuto(),
+									new InstantCommand(() -> follower.followPath(grabPickup1, true))
+								),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(() -> follower.followPath(dropoffPickup1, true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
-								new InstantCommand(() -> follower.followPath(grabPickup2, true)),
-								new WaitUntilCommand(() -> !follower.isBusy()),
+								//new InstantCommand(() -> follower.followPath(grabPickup2, true)),
+								//new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(() -> follower.followPath(dropoffPickup2, true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
-								new InstantCommand(() -> follower.followPath(grabPickup3, true)),
-								new WaitUntilCommand(() -> !follower.isBusy()),
+								//new InstantCommand(() -> follower.followPath(grabPickup3, true)),
+								//new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(() -> follower.followPath(dropoffPickup3, true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(()->follower.followPath(park,true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								//SCORE
-								new InstantCommand(() -> outtake.clawClose()),
 								score, score, score, score
 								//Collect new sample
 								// Add additional commands here, e.g., for scoring or parking
