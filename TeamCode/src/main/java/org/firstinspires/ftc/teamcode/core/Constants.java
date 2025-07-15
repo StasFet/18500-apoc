@@ -21,7 +21,7 @@ public class Constants {
     public static double LIFT_UP = -800; //has been tested
     public static double LIFT_DOWN = 25; //has been tested
     public static double LIFT_SPECIMEN_WALL = -150;
-    public static double LIFT_SPECIMEN_BAR = -370; //used to be 410
+    public static double LIFT_SPECIMEN_BAR = -350; //used to be 410
 
 
     // intake

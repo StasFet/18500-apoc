@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
+import static org.firstinspires.ftc.teamcode.core.Constants.ARM_DEPOSIT_SPECIMEN;
 import static org.firstinspires.ftc.teamcode.core.Constants.ARM_LINK_IN;
 import static org.firstinspires.ftc.teamcode.core.Constants.ARM_START;
 import static org.firstinspires.ftc.teamcode.core.Constants.INTAKE_HOVER;
@@ -62,13 +63,13 @@ public class GoodnaSpecAuto extends CommandOpMode {
 	private final Pose pickup1Control1Pose = new Pose(9.900, 30.400, Math.toRadians(0));
 	private final Pose pickup1Control2Pose = new Pose(67.000, 40.000, Math.toRadians(0));
 	private final Pose dropoff1Pose = new Pose(18.000, 27.000, Math.toRadians(0));
-	private final Pose pickup2Pose = new Pose(60.400, 14.9, Math.toRadians(0));
+	private final Pose pickup2Pose = new Pose(60.400, 16, Math.toRadians(0));
 	private final Pose pickup2Control1Pose = new Pose(61.500, 22.800, Math.toRadians(0));
 	private final Pose pickup2Control2Pose = new Pose(58.300, 25.700, Math.toRadians(0));
-	private final Pose dropoff2Pose = new Pose(20.000, 14.000, Math.toRadians(0));
-	private final Pose pickup3Pose = new Pose(60.000, 11.000, Math.toRadians(0));
+	private final Pose dropoff2Pose = new Pose(20.000, 16.000, Math.toRadians(0));
+	private final Pose pickup3Pose = new Pose(60.000, 10.000, Math.toRadians(0));
 	private final Pose pickup3ControlPose = new Pose(64.177, 15.116, Math.toRadians(0));
-	private final Pose dropoff3Pose = new Pose(15,11,Math.toRadians(0));
+	private final Pose dropoff3Pose = new Pose(15,10,Math.toRadians(0));
 	private final Pose parkPose = new Pose(9.750, 34.000, Math.toRadians(0));
 	private final Pose parkControl1Pose = new Pose(28.000, 5.000, Math.toRadians(0));
 	private final Pose parkControl2Pose = new Pose(20,38,Math.toRadians(0));
@@ -181,30 +182,43 @@ public class GoodnaSpecAuto extends CommandOpMode {
 		boolean dropIntake = false;
 
 		Command score = new SequentialCommandGroup(
-				new InstantCommand(()->follower.followPath(scoreSpecimen,true)),
+				new InstantCommand(() ->outtake.clawClose()),
+				new WaitCommand(200),
+				new ParallelCommandGroup(
+						CMD.specHighBar(),
+						new SequentialCommandGroup(
+								new WaitCommand(200),
+								new InstantCommand(()->follower.followPath(scoreSpecimen,true))
+						)
+
+				),
                 new WaitUntilCommand(() -> !follower.isBusy()),
-				CMD.specHighBar(),
                 new WaitCommand(200),
 				// starts at scorePose
 				new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
 				new WaitUntilCommand(() -> !follower.isBusy()),
 				new InstantCommand(()->follower.followPath(parkApproach,true)),
-                new WaitUntilCommand(() -> !follower.isBusy()),
 				CMD.postSpecAuto(),
+                new WaitUntilCommand(() -> !follower.isBusy()),
                 new WaitCommand(200),
 				// ends at parkPose
 				new InstantCommand(()->follower.followPath(scoringPark,true)),
-				new WaitUntilCommand(() -> !follower.isBusy())
+				new WaitUntilCommand(() -> !follower.isBusy()),
+				new InstantCommand(() -> outtake.clawClose())
 		);
 
 		schedule(
 				new ParallelCommandGroup(
 						new AlwaysUpdateLiftPID(lift),
 						new SequentialCommandGroup(
-								new IntakeRetract(intake, outtake),
-								CMD.specHighBar(),
-								new WaitCommand(200),
-								new InstantCommand(() -> follower.followPath(scorePreload)),
+								new InstantCommand(() -> intake.brake()),
+                                new ParallelCommandGroup(
+                                        CMD.specHighBar(),
+										new SequentialCommandGroup(
+												new WaitCommand(500),
+												new InstantCommand(() -> follower.followPath(scorePreload))
+										)
+                                ),
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								//score preloaded specimen
 								new WaitCommand(100),
@@ -224,11 +238,9 @@ public class GoodnaSpecAuto extends CommandOpMode {
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								new InstantCommand(()->follower.followPath(park,true)),
 								new WaitUntilCommand(() -> !follower.isBusy()),
-								//scoring section
-								new InstantCommand(()->follower.followPath(scoreSpecimen,true)),
-								new WaitUntilCommand(() -> !follower.isBusy()),
 								//SCORE
-								score, score, score, score, score
+								new InstantCommand(() -> outtake.clawClose()),
+								score, score, score, score
 								//Collect new sample
 								// Add additional commands here, e.g., for scoring or parking
 						)
@@ -245,6 +257,7 @@ public class GoodnaSpecAuto extends CommandOpMode {
 			intake.wristToPos(INTAKE_HOVER);
 			dropIntake = true;
 		}
+
 
 		//pid
 		//CommandScheduler.getInstance().schedule(new AlwaysUpdateLiftPID(lift));
