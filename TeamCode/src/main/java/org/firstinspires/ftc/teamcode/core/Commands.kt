@@ -49,11 +49,12 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                     intake.intakeCustomPower(-0.8)
                     intake.brake()
                 }),
-                WaitCommand(50),
+                WaitCommand(75),
+                InstantCommand({intake.intakeOff()}),
                 InstantCommand({outtake.claw.setPosition(0.25)}),
                 WaitCommand(150),
                 InstantCommand({outtake.setLinkagePos(ARM_LINK_IN)}),
-                InstantCommand({intake.intakeOff()})
+
             ),
             WaitCommand(1),
             { intake.state == SubsystemStates.IntakeStates.TRANSFER }
@@ -150,7 +151,7 @@ class Commands(val intake: Intake, val outtake: Outtake, val lift: Lift) {
                 InstantCommand({outtake.setPosition(ARM_SPEC_BAR)}),
                 WaitCommand(100),
                 InstantCommand({outtake.clawClose()}),
-                WaitCommand(400),
+                WaitCommand(500),
                 InstantCommand({outtake.setLinkagePos(ARM_LINK_OUT)}),
 
 

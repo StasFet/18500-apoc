@@ -55,10 +55,10 @@ public class GoodnaSpecAuto extends CommandOpMode {
 	private int pathState;
 
 	private final Pose startPose = new Pose(8.75, 65.250, Math.toRadians(0));
-	private final Pose preloadScorePose = new Pose(39,66,Math.toRadians(0));
-	private final Pose scorePose = new Pose(39, 66, Math.toRadians(5));
+	private final Pose preloadScorePose = new Pose(38,66,Math.toRadians(0));
+	private final Pose scorePose = new Pose(38, 66, Math.toRadians(5));
 	private final Pose scoochPose = new Pose(39, 68.5, Math.toRadians(0));
-	private final Pose scoreControlPose = new Pose(8.750, 70.000, Math.toRadians(0));
+	private final Pose scoreControlPose = new Pose(8.750, 60.000, Math.toRadians(0));
 	private final Pose pickup1Pose = new Pose(61.500, 27.000, Math.toRadians(0));
 	private final Pose pickup1Control1Pose = new Pose(9.900, 30.400, Math.toRadians(0));
 	private final Pose pickup1Control2Pose = new Pose(67.000, 40.000, Math.toRadians(0));
@@ -70,10 +70,10 @@ public class GoodnaSpecAuto extends CommandOpMode {
 	//private final Pose pickup2Control1Pose = new Pose(61.500, 22.800, Math.toRadians(0));
 	//private final Pose pickup2Control2Pose = new Pose(58.300, 25.700, Math.toRadians(0));
 	private final Pose dropoff2Pose = new Pose(20.000, 16.000, Math.toRadians(0));
-	//private final Pose pickup3Pose = new Pose(60.000, 10.000, Math.toRadians(0));
+	private final Pose pickup3Pose = new Pose(60.000, 10.000, Math.toRadians(0));
 	//private final Pose pickup3ControlPose = new Pose(64.177, 15.116, Math.toRadians(0));
 	private final Pose pickup3Control1Pose = new Pose(51, 16, Math.toRadians(0));
-	private final Pose pickup3Control2Pose = new Pose(100, 6, Math.toRadians(0));
+	private final Pose pickup3Control2Pose = new Pose(85, 8, Math.toRadians(0));
 	private final Pose dropoff3Pose = new Pose(15,10,Math.toRadians(0));
 	private final Pose parkPose = new Pose(9.0, 34.000, Math.toRadians(0));
 	private final Pose parkControl1Pose = new Pose(28.000, 5.000, Math.toRadians(0));
@@ -102,8 +102,9 @@ public class GoodnaSpecAuto extends CommandOpMode {
 						new Point(pickup1Pose),
 						new Point(dropoff1Control1Pose),
 						new Point(dropoff1Control2Pose),
+						new Point(dropoff1Pose),
 						new Point(dropoff1Control3Pose),
-						new Point(dropoff1Pose)
+						new Point(pickup2Pose)
 				))
 				.setConstantHeadingInterpolation(Math.toRadians(0))
 				.build();
@@ -143,7 +144,10 @@ public class GoodnaSpecAuto extends CommandOpMode {
 				.build();
 
 		scoreSpecimen = follower.pathBuilder()
-				.addPath(new BezierLine(new Point(parkPose),new Point(scorePose)))
+				.addPath(new BezierCurve(
+						new Point(parkPose),
+						new Point(scoreControlPose),
+						new Point(scorePose)))
 				.setLinearHeadingInterpolation(0,Math.toRadians(5))
 				.build();
 
@@ -213,6 +217,7 @@ public class GoodnaSpecAuto extends CommandOpMode {
 				//new InstantCommand(()->follower.followPath(scoochSpecimens,true)),
 				//new WaitUntilCommand(() -> !follower.isBusy()),
 				new InstantCommand(()-> outtake.clawOpen()),
+				new WaitCommand(100),
 				new ParallelCommandGroup(
 						CMD.postSpecAuto(),
 						new InstantCommand(()->follower.followPath(parkApproach,true))
@@ -239,6 +244,7 @@ public class GoodnaSpecAuto extends CommandOpMode {
 								new WaitUntilCommand(() -> !follower.isBusy()),
 								//score preloaded specimen
 								new InstantCommand(()-> outtake.clawOpen()),
+								new WaitCommand(100),
 								new ParallelCommandGroup(
 									CMD.postSpecAuto(),
 									new InstantCommand(() -> follower.followPath(grabPickup1, true))

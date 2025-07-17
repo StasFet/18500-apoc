@@ -27,8 +27,8 @@ import org.firstinspires.ftc.teamcode.core.SubsystemStates
 import org.firstinspires.ftc.teamcode.subsystems.*
 import pedroPathing.constants.*
 
-@TeleOp(name="APOC TeleOp")
-class ApocTele() : CommandOpMode() {
+//@TeleOp(name="APOC TeleOp")
+open class ApocTeleBase() : CommandOpMode() {
 
     lateinit var robot: Robot
     lateinit var odo: GoBildaPinpointDriver
@@ -56,10 +56,10 @@ class ApocTele() : CommandOpMode() {
     lateinit var intakeStartPositionBtn: GamepadButton
 
     override fun initialize() {
-
+        // initrobot
+        // set colours
         CommandScheduler.getInstance().reset()
-        robot = Robot(hardwareMap, telemetry, gamepad1, gamepad2)
-        robot.setColours(Intake.Colours.BLUE, Intake.Colours.YELLOW)    //Intake.Colours.RED, Intake.Colours.BLUE) //choose colours
+
         odo = robot.odo
         follower = robot.follower
         dt = MecanumDrive(robot)
@@ -147,6 +147,10 @@ class ApocTele() : CommandOpMode() {
         //runtimeControls()
         super.run()
         telemetry()
+    }
+
+    fun initRobot() {
+        robot = Robot(hardwareMap, telemetry, gamepad1, gamepad2)
     }
 
     fun telemetry() {

@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.core.Constants.*
 import org.firstinspires.ftc.teamcode.core.SubsystemStates
-import org.firstinspires.ftc.teamcode.opmodes.ApocTele
 import org.firstinspires.ftc.teamcode.subsystems.Intake
 
 class IntakeExtend(val intake: Intake) : CommandBase() {
